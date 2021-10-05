@@ -42,4 +42,8 @@ _Lib_ contains folders - each representing **a feature** (eg. _profile\_creation
 and _packages_ - containing Flutter or Dart modules that are either a **widget library** (_my\_flutter\_theme_) or 
 a domain of **models** and **data repositories** _(my\_flutter\_authentication)_.
 
-You can use the extension to quickly create features or packages.
+You can use [the extension](https://github.com/nathanielxd/rainwater/master/extensions/vscode) to quickly create features or packages.
+
+# Documentation
+
+You can find the full docs [here](https://github.com/nathanielxd/rainwater/master/docs/DOCS.md).
