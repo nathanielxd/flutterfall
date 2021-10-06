@@ -7,19 +7,17 @@ Rainwater is a strict clean architectural design pattern for the Flutter framewo
 - Treatment of models &amp; data providers as microservices separate from the main app
 - Abstraction of data repositories allowing modular backend implementation
 
-Rainwater allows you to employ clean architecture in Flutter, simplifying the separation of code into independent layers. 
-This will ensure that your project is scalable, easy to read and consistent while maintaining simplicity.
+Rainwater allows you to employ clean architecture in Flutter, simplifying the separation of code into independent layers. This will ensure that your project is scalable, easy to read and consistent while maintaining simplicity.
 
-Rainwater is based on [bloc](https://pub.dev/packages/flutter_bloc) for state-management, 
-[formz](https://pub.dev/packages/formz) for form representation input and 
-[equatable](https://pub.dev/packages/equatable). 
-It also features a [VSCode extension](https://github.com/nathanielxd/rainwater/master/extensions/vscode) to help a quick implementation.
+Rainwater is based on [bloc](https://pub.dev/packages/flutter_bloc) for state-management, [formz](https://pub.dev/packages/formz) for form representation input and [equatable](https://pub.dev/packages/equatable). It also features a [VSCode extension](https://github.com/nathanielxd/rainwater/master/extensions/vscode) to help a quick implementation.
 
 ## Requirements
 
 - Flutter installed on your system
 - Intermediate knowledge of Flutter and BLoC
 - (For the extension) VSCode installed on your system
+
+If you are in doubt about how **BLoC** works, I recommend [this article](https://www.didierboelens.com/2018/08/reactive-programming-streams-bloc/).
 
 # Quick Start
 
