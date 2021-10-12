@@ -137,4 +137,4 @@ As observed, we have 3 main folders:
 
 ## Examples
 
-You can find examples at the Rainwater Github repo, including the infamous counter, authentication but also a board game manager.
+You can find examples at the Rainwater Github repo, including the infamous counter and authentication.
