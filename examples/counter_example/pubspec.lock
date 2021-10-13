@@ -81,6 +81,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutterfall_theme:
+    dependency: "direct main"
+    description:
+      path: "../packages/flutterfall_theme"
+      relative: true
+    source: path
+    version: "1.0.0+1"
   formz:
     dependency: "direct main"
     description:
@@ -123,13 +130,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.1"
-  rainwater_theme:
-    dependency: "direct main"
-    description:
-      path: "../packages/rainwater_theme"
-      relative: true
-    source: path
-    version: "1.0.0+1"
   sky_engine:
     dependency: transitive
     description: flutter

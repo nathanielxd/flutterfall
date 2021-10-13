@@ -5,8 +5,8 @@ const vscode = require("vscode");
 const initialize_project_command_1 = require("./commands/initialize-project-command");
 const new_module_command_1 = require("./commands/new-module-command");
 function activate(context) {
-    vscode.commands.registerCommand('rainwater.newModule', new_module_command_1.newModule);
-    vscode.commands.registerCommand('rainwater.initializeProject', initialize_project_command_1.initializeProject);
+    vscode.commands.registerCommand('flutterfall.newModule', new_module_command_1.newModule);
+    vscode.commands.registerCommand('flutterfall.initializeProject', initialize_project_command_1.initializeProject);
 }
 exports.activate = activate;
 function deactivate() { }

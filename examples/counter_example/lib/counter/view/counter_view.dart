@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:counter/counter/counter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rainwater_theme/theme.dart';
+import 'package:flutterfall_theme/theme.dart';
 
 class CounterView extends StatelessWidget {
 
@@ -20,7 +20,7 @@ class CounterView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Center(
-                  child: Text('Rainwater Counter', style: Theme.of(context).textTheme.headline3)
+                  child: Text('Flutterfall Counter', style: Theme.of(context).textTheme.headline3)
                 ),
                 Spacer(),
                 BlocBuilder<CounterCubit, CounterState>(
@@ -43,14 +43,14 @@ class CounterView extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        child: RainwaterPrimaryButton(
+                        child: FlutterfallPrimaryButton(
                           label: Text('Decrement -'), 
                           onTap: () => context.read<CounterCubit>().decrease()
                         )
                       ),
                       SizedBox(width: 10),
                       Expanded(
-                        child: RainwaterPrimaryButton(
+                        child: FlutterfallPrimaryButton(
                           label: Text('Increment +'), 
                           onTap: () => context.read<CounterCubit>().increase()
                         ),
@@ -60,7 +60,7 @@ class CounterView extends StatelessWidget {
                 ),
                 BlocBuilder<CounterCubit, CounterState>(
                   builder: (context, state) {
-                    return RainwaterPrimaryButton(
+                    return FlutterfallPrimaryButton(
                       backgroundColor: _colors.map((e) => e.shade700).toList()[state.colorIndex],
                       label: Text('Change Colour'), 
                       onTap: () => context.read<CounterCubit>().randomizeColor()

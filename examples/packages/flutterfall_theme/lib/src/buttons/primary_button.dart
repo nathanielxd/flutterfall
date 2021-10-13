@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class RainwaterPrimaryButton extends StatelessWidget {
+class FlutterfallPrimaryButton extends StatelessWidget {
 
   final Text label;
   final void Function() onTap;
   final Color? backgroundColor;
     
   /// A button that is filled with Theme's primary color, has rounded corners of 10px, inner padding of 10px and elevation of 5.
-  const RainwaterPrimaryButton({ 
+  const FlutterfallPrimaryButton({ 
     Key? key,
     required this.label,
     required this.onTap,

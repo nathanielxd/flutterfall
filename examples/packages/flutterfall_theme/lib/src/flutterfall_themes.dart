@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class RainwaterThemes {
+class FlutterfallThemes {
 
   static final _primaryColor = Color(0xff002e3b);
 

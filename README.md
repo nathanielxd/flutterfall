@@ -15,7 +15,7 @@ The goal is to allow you employ **clean architecture** in Flutter, simplifying t
 
 ## Based on
 
-Rainwater is based on [bloc](https://pub.dev/packages/flutter_bloc) for stream-based state-management, [formz](https://pub.dev/packages/formz) for form representation input and [equatable](https://pub.dev/packages/equatable). It also features a [VSCode extension](https://github.com/nathanielxd/rainwater/master/extensions/vscode) to help a quick implementation.
+Flutterfall is based on [bloc](https://pub.dev/packages/flutter_bloc) for stream-based state-management, [formz](https://pub.dev/packages/formz) for form representation input and [equatable](https://pub.dev/packages/equatable). It also features a [VSCode extension](https://github.com/nathanielxd/flutterfall/master/extensions/vscode) to help a quick implementation.
 
 ## Requirements
 
@@ -45,9 +45,9 @@ my_flutter_app/
 - _Lib_ contains folders each representing **a feature** (eg. _profile\_creation_) 
 - _packages_ has Flutter or Dart modules that are either a **widget library** (_my\_flutter\_theme_) or a domain of **models** and **data repositories** _(my\_flutter\_authentication)_.
 
-You can use [the extension](https://github.com/nathanielxd/rainwater/master/extensions/vscode) to quickly create features or packages.
+You can use [the extension](https://github.com/nathanielxd/flutterfall/master/extensions/vscode) to quickly create features or packages.
 
 # Documentation
 
-- [Full Documentation](https://github.com/nathanielxd/rainwater/master/docs/DOCS.md).
-- [VSCode Extension](https://github.com/nathanielxd/rainwater/master/extensions/vscode).
+- [Full Documentation](https://github.com/nathanielxd/flutterfall/master/docs/DOCS.md).
+- [VSCode Extension](https://github.com/nathanielxd/flutterfall/master/extensions/vscode).

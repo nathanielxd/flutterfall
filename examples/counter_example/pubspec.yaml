@@ -14,8 +14,8 @@ dependencies:
   formz: null
   flutter_bloc: null
 
-  rainwater_theme:
-    path: ../packages/rainwater_theme
+  flutterfall_theme:
+    path: ../packages/flutterfall_theme
 
 dev_dependencies:
 

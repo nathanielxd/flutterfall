@@ -1,7 +1,7 @@
 import 'package:counter/counter/counter.dart';
 import 'package:flutter/material.dart';
 import 'package:counter/app/app.dart';
-import 'package:rainwater_theme/theme.dart';
+import 'package:flutterfall_theme/theme.dart';
 
 class AppView extends StatelessWidget {
 
@@ -10,8 +10,8 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'rainwater',
-      theme: RainwaterThemes.light,
+      title: 'flutterfall',
+      theme: FlutterfallThemes.light,
       home: CounterPage()
     );
   }

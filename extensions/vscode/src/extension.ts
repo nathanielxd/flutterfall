@@ -4,8 +4,8 @@ import { newModule } from './commands/new-module-command';
 
 export function activate(context: vscode.ExtensionContext) {
 
-	vscode.commands.registerCommand('rainwater.newModule', newModule);
-	vscode.commands.registerCommand('rainwater.initializeProject', initializeProject);
+	vscode.commands.registerCommand('flutterfall.newModule', newModule);
+	vscode.commands.registerCommand('flutterfall.initializeProject', initializeProject);
 }
 
 export function deactivate() {}

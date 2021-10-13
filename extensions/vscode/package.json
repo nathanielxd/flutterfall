@@ -1,10 +1,10 @@
 {
-  "name": "rainwater",
-  "displayName": "rainwater",
-  "description": "A simple file generator for Flutter projects respecting the Rainwater architecture.",
+  "name": "flutterfall",
+  "displayName": "flutterfall",
+  "description": "A simple file generator for Flutter projects respecting the Flutterfall architecture.",
   "version": "0.0.7",
   "publisher": "nathanielxd",
-  "repository": "https://github.com/nathanielxd/rainwater",
+  "repository": "https://github.com/nathanielxd/flutterfall",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -12,31 +12,31 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:rainwater.newModule",
-    "onCommand:rainwater.initializeProject"
+    "onCommand:flutterfall.newModule",
+    "onCommand:flutterfall.initializeProject"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "rainwater.newModule",
-        "title": "Rainwater: New Module"
+        "command": "flutterfall.newModule",
+        "title": "Flutterfall: New Module"
       },
       {
-        "command": "rainwater.initializeProject",
-        "title": "Rainwater: Initialize Project"
+        "command": "flutterfall.initializeProject",
+        "title": "Flutterfall: Initialize Project"
       }
     ],
     "menus": {
       "explorer/context": [
         {
-          "command": "rainwater.newModule",
-          "group": "rainwaterGroup@1",
+          "command": "flutterfall.newModule",
+          "group": "flutterfallGroup@1",
           "when": "explorerResourceIsFolder"
         },
         {
-          "command": "rainwater.initializeProject",
-          "group": "rainwaterGroup@1",
+          "command": "flutterfall.initializeProject",
+          "group": "flutterfallGroup@1",
           "when": "explorerResourceIsFolder"
         }
       ]
