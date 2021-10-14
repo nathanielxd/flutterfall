@@ -24,6 +24,7 @@ We treat and organise these layers as such:
 - A **module** is a microservice package consisting of *models* and *data repositories* that feeds into multiple features
 
 A general relation between data and features can be observed in the following diagram:
+
 ![](assets/diagrams/General_Module-Feature.png)
 
 ### Data Layer
@@ -75,17 +76,26 @@ See directory structure for business logic. (LINK HERE)
 
 Blocs should respect the repository pattern and use data through dependency-injection.
 
-(Example of BlocProvider .page code)
+```dart
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
+
+  final IAuthenticationRepository authenticationRepository;
+
+  const AuthenticationRepository({
+    required this.authenticationRepository
+  });
+}
+```
 
 ### Presentation Layer
 
 The presentation layer is stricly UI building reactive to the bloc's state. You should separate all the presentation building in a file *example_view.dart* away from the bloc provider declaration from *example_page.dart*.
 
-(Example of directory structure)
+![](assets/screenshots/view_dir_example.png)
 
 Tip: It is necessary that UI components throughout the app are referencing themselves. Only bloc-to-bloc is discouraged. For example, I can use a widget from my *tasks* feature in my *task_editor* page, or vice-versa.
 
-See directory structure for presentation. (LINK HERE)
+[See directory structure for presentation.](#presentation_directory)
 
 ### Example
 
@@ -135,11 +145,11 @@ my_flutter_app/
 
 The _lib/_ folder must contain directories each representing a **piece of functionality** or **feature** and finally the entry-point of your app, _main.dart_:
 
-![](assets/lib_dir_example.png)
+![](assets/screenshots/lib_dir_example.png)
 
 The _packages/_ folder contain directories each representing either a **package** or **module** that exposes **models** and **data repositories** or a theme library. Generally, custom packages made solely for the project. This ensures maximum abstraction and therefore, scalability.
 
-![](assets/packages_dir_example.png)
+![](assets/screenshots/packages_dir_example.png)
 
 Treating packages as microservices is beneficial to the overall structure therefore it is also allowed to host them somewhere separate, for example on multiple github repositories. The _packages/_ folder only contains local packages.
 
@@ -148,11 +158,11 @@ Treating packages as microservices is beneficial to the overall structure theref
 A feature directory or &quot;module&quot; contains everything regarding that specific functionality.
 This is where you find your **view** and **logic** , each in it&#39;s own folder:
 
-![](assets/auth_dir_example.png)
+![](assets/screenshots/auth_dir_example.png)
 
 A barrel file (_authentication.dart)_ is also present, exporting all the files:
 
-![](assets/barrel_export_example.png)
+![](assets/screenshots/barrel_export_example.png)
 
 **Each folder and file should be respecting the snake case style** _(profile\_creation/, profile\_creation\_page.dart)._
 
@@ -165,7 +175,7 @@ The view directory relates only to the specific functionality. It must have 2 fi
 
 Example of a page's code:
 
-![](assets/page_code_example.png)
+![](assets/screenshots/page_code_example.png)
 Where **AuthenticationView** is a normal Widget where you build your UI.
 
 Tip: If you have an **authentication** directory, but you want your **sign up** and **log in** to be separate pages and have two distinct views, you are **NOT** going to create a view folder inside authentication. Instead, _authentication_ will contain logic for creating an account and logging in, while _sign\_up_ and _log\_in_ will contain the _view_.
@@ -174,19 +184,19 @@ Tip: If you have an **authentication** directory, but you want your **sign up** 
 
 You will write your feature-specific logic in a folder named &quot;cubit&quot; or &quot;bloc&quot;. Normally, a bloc contains 3 files: the bloc itself, the state and the event. A cubit will only have the cubit and the state. Eg. _authentication\_bloc.dart, authentication\_state.dart, authentication\_event.dart_.
 
-![](assets/bloc_dir_example.png)
+![](assets/screenshots/bloc_dir_example.png)
 
 ### Input Directory
 
 If your feature is going to contain text fields for user input, a directory named _input_ will also be present. Every field type must have it&#39;s own **formz** file. [You can read about formz here](https://pub.dev/packages/formz).
 
-![](assets/input_dir_example.png)
+![](assets/screenshots/input_dir_example.png)
 
 ### Widgets Directory
 
 Widgets that are being used inside the view are located inside a _widgets_ folder.
 
-![](assets/widgets_dir_example.png)
+![](assets/screenshots/widgets_dir_example.png)
 
 ### Config Directory
 
@@ -198,10 +208,9 @@ These are the most common folders you&#39;ll have inside a feature that should c
 
 Overall, a feature directory respecting Flutterfall would look like this:
 
-![](assets/feature_full_dir_example.png)
+![](assets/screenshots/feature_full_dir_example.png)
 
-<div id='module-directory'/>
-### Module Directory
+### Module Directory <a name="module_directory"></a>
 
 As previously mentioned, we consider modules - Flutter or Dart packages that we use in our app. To persist abstraction as much as possible, our data services, repositories and models will be separated into these packages; same with our theme library.
 
@@ -209,15 +218,15 @@ These modules can be situated inside the Flutter app directory or in a separate 
 
 A packages directory situated inside your flutter app should look similar to the example below:
 
-![](assets/packages_dir_example_2.png)
+![](assets/screenshots/packages_dir_example_2.png)
 
 A theme package is a Flutter library that contains all your custom widgets and theme data used in your app.
 
-![](assets/theme_package_dir_example.png)
+![](assets/screenshots/theme_package_dir_example.png)
 
 A data package is a standard data provider that exposes models and repositories for your use. A repository can access data either on a local disk or the internet.
 
-![](assets/data_package_dir_example.png)
+![](assets/screenshots/data_package_dir_example.png)
 
 As observed, we have 3 main folders:
 
