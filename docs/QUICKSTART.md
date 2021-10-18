@@ -10,7 +10,7 @@ We treat and organise these layers as such:
 * A *feature* is a congregation of /business logic/ and /presentation/
 * A *module* is a microservice package consisting of /models/ and /data repositories/ that feeds into multiple features
 
-The general directory structure of a Flutter app looks like this:
+The general directory structure of a Flutterfall app looks like this:
 
 ```
 my_flutter_app/
@@ -29,3 +29,5 @@ my_flutter_app/
 * /packages/ has Flutter or Dart modules that are either a *widget library* (/my_flutter_theme/) or a domain of *models* and *data repositories* /(my_flutter_authentication)/.
 
 You can use [the extension](https://github.com/nathanielxd/flutterfall/master/extensions/vscode) to quickly create features or packages.
+
+For more information, please visit the docs.
