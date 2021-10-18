@@ -1,14 +1,14 @@
 # Quick Start
 By using the bloc pattern, we separate our application in 3 layers:
-* Presentation View
+* Presentation
 * Business Logic
 * Data
 	* Models
 	* Repositories
 
 We treat and organise these layers as such:
-* A *feature* is a congregation of /business logic/ and /presentation/
-* A *module* is a microservice package consisting of /models/ and /data repositories/ that feeds into multiple features
+* A *feature* is a congregation of **business logic** and **presentation**
+* A *module* is a microservice package consisting of **models** and **data repositories** that feeds into multiple features
 
 The general directory structure of a Flutterfall app looks like this:
 
@@ -30,4 +30,4 @@ my_flutter_app/
 
 You can use [the extension](https://github.com/nathanielxd/flutterfall/master/extensions/vscode) to quickly create features or packages.
 
-For more information, please visit the docs.
+For more information, please visit the [docs](https://github.com/nathanielxd/flutterfall/blob/master/docs/DOCS.md).
