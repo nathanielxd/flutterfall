@@ -1,4 +1,14 @@
 # Quick Start
+By using the bloc pattern, we separate our application in 3 layers:
+* Presentation View
+* Business Logic
+* Data
+	* Models
+	* Repositories
+
+We treat and organise these layers as such:
+* A *feature* is a congregation of /business logic/ and /presentation/
+* A *module* is a microservice package consisting of /models/ and /data repositories/ that feeds into multiple features
 
 The general directory structure of a Flutter app looks like this:
 
@@ -15,7 +25,7 @@ my_flutter_app/
 ├─ pubspec.yaml
 ```
 
-- _Lib_ contains folders each representing **a feature** (eg. _profile\_creation_) 
-- _packages_ has Flutter or Dart modules that are either a **widget library** (_my\_flutter\_theme_) or a domain of **models** and **data repositories** _(my\_flutter\_authentication)_.
+* /lib/ contains folders each representing *a feature* (eg. /profile_creation/)
+* /packages/ has Flutter or Dart modules that are either a *widget library* (/my_flutter_theme/) or a domain of *models* and *data repositories* /(my_flutter_authentication)/.
 
 You can use [the extension](https://github.com/nathanielxd/flutterfall/master/extensions/vscode) to quickly create features or packages.
