@@ -1,21 +1,26 @@
 # Documentation
 
-This document serves the purpose to analyze the architecture, structure and implementation of the architectural design pattern Flutterfall.
+This document serves the purpose to analyze the **architecture**, **structure** and **implementation** of the architectural design pattern Flutterfall.
 
 ## Table of Contents
 
+1. [Overview](#overview)
+2. [Architecture](#architecture)
+3. [Directory Structure](#directory_structure)
+4. [Examples](#examples)
+5. [Why?](#why?)
+6. [Contribute](#contribute)
 
+## Overview <a name = "overview"></a>
 
-## Overview
-
-Flutterfall is an architectural design pattern uses the bloc pattern to create an architecture featuring:
+Flutterfall is an architectural design pattern uses bloc to create an architecture featuring:
 
 - Separation of models, logic and view
 - A firm and consistent directory structure easy to understand
 - Treatment of models and data providers as microservices separate from the main application
 - Abstraction of data repositories allowing modular backend implementation
 
-## Architecture
+## Architecture <a name = "architecture"></a>
 
 ![](assets/diagrams/General_Module-Feature_front.png)
 
@@ -36,20 +41,24 @@ A general relation between data and features can be observed in the following di
 
 ### Data Layer
 
-The data layer is our module layer. A data module contains models, data sources and data repositories that provide either real or mocked data to our application.
+The data layer is our module layer. A data module contains **models**, **data sources** and **data repositories** that provide either real or mocked data to our application.
 
-**Reusable**: Treating data layers as microservices help us with reuseability through multiple projects and is generally a good rule for clean architecture. These services are basic Flutter or Dart packages, then referenced in our main app's pubspec.yaml.
+**Reusable**: Treating data layers as microservices help us with reuseability through multiple projects and is generally a good rule for clean architecture. These services are basic Flutter or Dart **packages**, then referenced in our main app's pubspec.yaml.
 
 ![](assets/screenshots/packages_dir_example.png)
 
-These packages can be either stored in a directory - *packages* or *modules* in our main project folder and referenced locally OR somewhere else and hosted on a git source.
+These packages can be either stored in a directory - */packages* or */modules* in our main project folder and referenced locally OR somewhere else and hosted on a git source.
 
-**Scalable**: For each data source there MUST be an abstract repository interface that is implemented by one or more repositories. This allows us to implement multiple repositories (eg. Firebase, RESTful, Mocked, Local Storage) and switch them whenever we need to or migrate to another provider, ensuring scalabilty.
+[See directory example for modules.](#module_directory)
+
+**Scalable**: For each data source there MUST be an abstract repository **interface** that is implemented by one or more repositories. This allows us to implement multiple repositories (eg. Firebase, RESTful, Mocked, Local Storage) and switch them whenever we need to or migrate to another provider, ensuring scalabilty.
 
 ```dart
 abstract class IAuthenticationRepository {
   /// Get stream of current user.
-  User get stream;
+  Stream<User> get stream;
+  /// Get current user.
+  User get currentUser;
   /// Authenticate a new user and updates [stream].
   Future<void> login(String email, String password);
   /// Logs out the existing user and updates [stream] with an empty user.
@@ -57,17 +66,14 @@ abstract class IAuthenticationRepository {
 }
 ```
 
-[See directory structure for modules.](#module_directory)
-
 ### Business Logic Layer
 
 The business logic layer is a bridge between the user interface - presentation and the data layer. Flutterfall architecture imposes certain rules that handle the organisation of the business logic.
 
-**Abstraction**: Each feature - from a presentation point-of-view: a widget, page or multitude of pages has no more than one business logic component. This forces us to expand our app functionality in as many features as possible.
+**Abstraction**: Each feature - from a presentation point-of-view: a widget, page or multitude of pages has no more than **one** business logic component. This forces us to expand our app functionality in as many features as possible.
 
-Example:
-
-We want to implement authentication therefore we make a sign up page and a log in page. We will create two **features** and there will be a logic component for each of them: 
+> **Example**
+> We want to implement authentication therefore we make a sign up page and a log in page. We will create two **features** so there will be a logic component for each of them: 
 - sign_up_bloc.dart - handles account creation, user input of 3 text fields (email, password, confirmation)
 - login_bloc.dart - containing account authentication, user input 2 text fields (email, password)
 
@@ -77,11 +83,11 @@ All these BLoCs will use the same authentication_repository.dart.
 
 Of course, depending on our needs, we could create only one feature *authentication* with only one bloc and only one page. But it's generally good practice to separate them as much as possible, especially taking into consideration UI and navigation.
 
-**Consistency**: In Flutterfall, try avoiding Bloc-to-Bloc communication as much is possible. Keeping a clean layered pattern is not only beneficial to the functioning and testing capabilities of our app, but also makes it easier to read and understand. **Modules** have a MANY-to-MANY relationship with features, and blocs should have no relationship at all.
+**Consistency**: Try avoiding **Bloc-to-Bloc** communication as much as possible. Keeping a clean layered pattern is not only beneficial to the functioning and testing capabilities of our app, but also makes it easier to read and understand. **Modules** have a many-to-many relationship with features, and blocs should have no relationship in between them at all.
 
-See directory structure for business logic. (LINK HERE)
+[See directory structure for business logic.](#bloc_directory)
 
-Blocs should respect the repository pattern and use data through dependency-injection.
+**Injection**: Blocs should respect the repository pattern and use data through dependency-injection.
 
 ```dart
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
@@ -96,19 +102,59 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
 ### Presentation Layer
 
-The presentation layer is stricly UI building reactive to the bloc's state. You should separate all the presentation building in a file *example_view.dart* away from the bloc provider declaration from *example_page.dart*.
+The presentation layer is strictly UI building reactive to the bloc's state. You should separate all the presentation building in a file *example_view.dart* away from the bloc provider declaration from *example_page.dart*.
 
-![](assets/screenshots/view_dir_example.png)
+Example of a **view**:
 
-Tip: It is necessary that UI components throughout the app are referencing themselves. Only bloc-to-bloc is discouraged. For example, I can use a widget from my *tasks* feature in my *task_editor* page, or vice-versa.
+```dart
+import 'package:flutter/material.dart';
 
-[See directory structure for presentation.](#presentation_directory)
+class AuthenticationView extends StatelessWidget {
 
-### Example
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            Text('Authentication'),
+            Text('View')
+          ]
+        )
+      )
+    );
+  }
+}
+```
+
+Example of a **page**:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class AuthenticationPage extends StatelessWidget {
+
+  static PageRoute get route => MaterialPageRoute(builder: (_) => AuthenticationPage());
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => AuthenticationBloc(),
+      child: AuthenticationView()
+    );
+  }
+}
+```
+
+Tip: UI components throughout the app are can be referencing themselves. Only bloc-to-bloc is discouraged. For example, I can use a widget from my *tasks* feature in my *account* page, or vice-versa.
+
+[See directory structure for presentation.](#view_directory)
+
+### Full Example
 
 ![](assets/diagrams/Advanced_Module-Feature.png)
 
-## Directory Structure
+## Directory Structure <a name = "directory_structure"></a>
 
 To make an idea of how a project using the Flutterfall's architecture concept looks like in terms of folder hierarchy, see the following expanded tree:
 
@@ -154,40 +200,43 @@ The _lib/_ folder must contain directories each representing a **piece of functi
 
 ![](assets/screenshots/lib_dir_example.png)
 
-The _packages/_ folder contain directories each representing either a **package** or **module** that exposes **models** and **data repositories** or a theme library. Generally, custom packages made solely for the project. This ensures maximum abstraction and therefore, scalability.
+The _packages/_ folder contain directories each representing a **module** that exposes **models** and **data repositories** or a theme library. Generally, custom packages made solely for the project.
 
 ![](assets/screenshots/packages_dir_example.png)
 
-Treating packages as microservices is beneficial to the overall structure therefore it is also allowed to host them somewhere separate, for example on multiple github repositories. The _packages/_ folder only contains local packages.
+Treating packages as microservices is beneficial to the overall structure therefore it is also allowed to host them somewhere separate, for example on multiple github repositories. The _/packages_ folder only contains **local** packages.
 
-### Feature Directory
+### Feature Directory <a name = "feature_directory"></a>
 
-A feature directory or &quot;module&quot; contains everything regarding that specific functionality.
-This is where you find your **view** and **logic** , each in it&#39;s own folder:
+A feature directory contains everything regarding that specific functionality. This is where you find your **view** and **logic**, each in it&#39;s own folder:
 
 ![](assets/screenshots/auth_dir_example.png)
 
 A barrel file (_authentication.dart)_ is also present, exporting all the files:
 
-![](assets/screenshots/barrel_export_example.png)
+```dart
+export 'view/authentication_page.dart';
+export 'view/authentication_view.dart';
 
-**Each folder and file should be respecting the snake case style** _(profile\_creation/, profile\_creation\_page.dart)._
+export 'bloc/authentication_bloc.dart';
 
-### View Directory
+export 'input/email.dart';
+export 'input/password.dart';
+```
+
+
+> **Each folder and file should be respecting the snake case style** _(profile\_creation/, profile\_creation\_page.dart)._
+
+### View Directory <a name = "view_directory"></a>
 
 The view directory relates only to the specific functionality. It must have 2 files:
 
 - View (_authentication\_view.dart_) - containing **UI & Widgets**
 - Page (_authentication\_page.dart_) - exposing logic **providers** & routing to the view
 
-Example of a page's code:
+![](assets/screenshots/view_dir_example.png)
 
-![](assets/screenshots/page_code_example.png)
-Where **AuthenticationView** is a normal Widget where you build your UI.
-
-Tip: If you have an **authentication** directory, but you want your **sign up** and **log in** to be separate pages and have two distinct views, you are **NOT** going to create a view folder inside authentication. Instead, _authentication_ will contain logic for creating an account and logging in, while _sign\_up_ and _log\_in_ will contain the _view_.
-
-### BLoC Directory
+### BLoC Directory <a name = "bloc_directory"></a>
 
 You will write your feature-specific logic in a folder named &quot;cubit&quot; or &quot;bloc&quot;. Normally, a bloc contains 3 files: the bloc itself, the state and the event. A cubit will only have the cubit and the state. Eg. _authentication\_bloc.dart, authentication\_state.dart, authentication\_event.dart_.
 
@@ -213,7 +262,7 @@ A feature might need a configuration or static data. This should go into a it&#3
 
 These are the most common folders you&#39;ll have inside a feature that should cover most of your needs. If anything, you can create more.
 
-Overall, a feature directory respecting Flutterfall would look like this:
+Overall, a feature directory should look similar to this:
 
 ![](assets/screenshots/feature_full_dir_example.png)
 
@@ -221,17 +270,17 @@ Overall, a feature directory respecting Flutterfall would look like this:
 
 As previously mentioned, we consider modules - Flutter or Dart packages that we use in our app. To persist abstraction as much as possible, our data services, repositories and models will be separated into these packages; same with our theme library.
 
-These modules can be situated inside the Flutter app directory or in a separate place, in case you will need to re-use them, maybe in an admin panel for your app.
+These modules can be situated inside the Flutter app directory or in a separate place, in case you will need to re-use them, maybe for an admin panel for your app.
 
 A packages directory situated inside your flutter app should look similar to the example below:
 
 ![](assets/screenshots/packages_dir_example_2.png)
 
-A theme package is a Flutter library that contains all your custom widgets and theme data used in your app.
+A **theme package** is a Flutter library that contains all your custom widgets and theme data used in your app.
 
 ![](assets/screenshots/theme_package_dir_example.png)
 
-A data package is a standard data provider that exposes models and repositories for your use. A repository can access data either on a local disk or the internet.
+A **data package** is a standard data provider that exposes models and repositories for your use. A repository can access data either on a local disk or the internet.
 
 ![](assets/screenshots/data_package_dir_example.png)
 
@@ -241,17 +290,22 @@ As observed, we have 3 main folders:
 - repositories - data service for our module - abstracted into an interface and implementations
 - _exceptions_ - if you want to use custom exceptions (example)
 
-## Implementation
+## Examples <a name = "examples"></a>
 
-## Examples
+**App examples:**
+1. [Counter](https://github.com/nathanielxd/flutterfall/tree/master/examples/counter_example)
+2. [Authentication](https://github.com/nathanielxd/flutterfall/tree/master/examples/authentication_example)
 
-You can find examples at the Flutterfall Github repo, including the infamous counter and authentication.
+**Quick resources:**
+1. Custom Exceptions
+2. Bloc States
 
-## Why?
 
-Bloc itself is an amazing concept and I thank (Bloc's creator) for making such an awesome state-management library.
+## Why? <a name = "Why?"></a>
 
-What I thought is that bloc's and many other patterns lack a strict architectural pattern. There are many inconsistencies in examples all over the internet and a lot of people find it hard to implement bloc their own way.
+Bloc itself is an amazing concept and I thank [Felix Angelov](https://github.com/felangel) and the Flutter community for making the awesome state-management library.
+
+What I thought is that bloc's and many other patterns lack a strict architectural pattern. There are many inconsistencies in examples and tutorials all over the internet and a lot of people find it hard to implement bloc their own way.
 
 So I came up with a stricter way of managing and organising a flutter project using bloc, that also comes with a directory structure.
 
@@ -261,8 +315,10 @@ Main points I made while creating this were:
 - Many developers working with a single concept in mind
 - Reuse many components through out the apps
 
+As it is now, it still is a **work in progress** and I urge everyone to ask questions, clarifications and make suggestions.
+
 I aim to make this project a powerful design helping developers make complex applications by composing them of smaller components but also a simple enough so that much more people trying to get into Flutter can understand it.
 
-## Contribute
+## Contribute <a name = "Contribute"></a>
 
-This project still requires attention and I'd love to get everyone's input, suggestions and feedback on it. Please do not hesitate to contribute or contact me regarding absolutely anything.
+This project still requires attention and I'd love to get everyone's input, suggestions and feedback on it. Please do not hesitate to contribute or contact me regarding absolutely anything at [me@nathans.dev](mailto:me@nathans.dev).
