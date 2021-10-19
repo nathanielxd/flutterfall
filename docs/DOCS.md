@@ -4,9 +4,16 @@ This document serves the purpose to analyze the architecture, structure and impl
 
 ## Table of Contents
 
+
+
 ## Overview
 
-## Requirements
+Flutterfall is an architectural design pattern uses the bloc pattern to create an architecture featuring:
+
+- Separation of models, logic and view
+- A firm and consistent directory structure easy to understand
+- Treatment of models and data providers as microservices separate from the main application
+- Abstraction of data repositories allowing modular backend implementation
 
 ## Architecture
 

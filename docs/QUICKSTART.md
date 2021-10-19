@@ -1,4 +1,12 @@
 # Quick Start
+
+Flutterfall uses the bloc pattern to create an architecture featuring:
+
+- Separation of models, logic and view
+- A firm and consistent directory structure easy to understand
+- Treatment of models and data providers as microservices separate from the main application
+- Abstraction of data repositories allowing modular backend implementation
+
 By using the bloc pattern, we separate our application in 3 layers:
 * Presentation
 * Business Logic

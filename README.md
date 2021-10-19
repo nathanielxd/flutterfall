@@ -5,7 +5,6 @@ A strict architectural design pattern for the Flutter framework.
 ## Overview
 
 Features:
-
 - Separation of models, logic and view
 - A firm and consistent directory structure easy to understand
 - Treatment of models and data providers as microservices separate from the main application
@@ -42,8 +41,8 @@ my_flutter_app/
 ├─ pubspec.yaml
 ```
 
-- _Lib_ contains folders each representing **a feature** (eg. _profile\_creation_) 
-- _packages_ has Flutter or Dart modules that are either a **widget library** (_my\_flutter\_theme_) or a domain of **models** and **data repositories** _(my\_flutter\_authentication)_.
+* /lib/ contains folders each representing *a feature* (eg. /profile_creation/)
+* /packages/ has Flutter or Dart modules that are either a *widget library* (/my_flutter_theme/) or a domain of *models* and *data repositories* /(my_flutter_authentication)/.
 
 You can use [the extension](https://github.com/nathanielxd/flutterfall/master/extensions/vscode) to quickly create features or packages.
 
