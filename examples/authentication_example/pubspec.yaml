@@ -1,20 +1,37 @@
-name: authentication
+name: authentication_example
 description: A new Flutter project.
 publish_to: none
 version: 1.0.0+1
+
 environment:
   sdk: '>=2.12.0 <3.0.0'
+
 dependencies:
-  equatable: null
-  formz: null
-  flutter_bloc: null
+
+  flutterfall_theme:
+    path: ../packages/flutterfall_theme
+
+  equatable:
+  formz:
+  flutter_bloc:
+
+  flutterfall_authentication:
+    path: ../packages/flutterfall_authentication
   firebase_core: ^1.6.0
   firebase_analytics: ^8.3.2
   firebase_auth: ^3.1.1
   cloud_firestore: ^2.5.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.0
+
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: Manrope
+      fonts:
+        - asset: fonts/Manrope-Regular.ttf
+        - asset: fonts/Manrope-Bold.ttf
+          weight: 700

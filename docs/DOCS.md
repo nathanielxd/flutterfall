@@ -8,8 +8,10 @@ This document serves the purpose to analyze the **architecture**, **structure** 
 2. [Architecture](#architecture)
 3. [Directory Structure](#directory_structure)
 4. [Examples](#examples)
-5. [Why?](#why?)
-6. [Contribute](#contribute)
+5. [Implementation](#implementation) <------ Types of bloc states, when to use cubit, custom exceptions, mocked repositories, how a model should look
+6. [Extensions](#extensions) <----------- TO DO : About VSCode extensions (for snipptets, generated code, bloc, formz, etc)
+7. [Why?](#why?)
+8. [Contribute](#contribute)
 
 ## Overview <a name = "overview"></a>
 
