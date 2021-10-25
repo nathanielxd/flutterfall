@@ -8,8 +8,8 @@ This document serves the purpose to analyze the **architecture**, **structure** 
 2. [Architecture](#architecture)
 3. [Directory Structure](#directory_structure)
 4. [Examples](#examples)
-5. [Implementation](#implementation) <------ Types of bloc states, when to use cubit, custom exceptions, mocked repositories, how a model should look
-6. [Extensions](#extensions) <----------- TO DO : About VSCode extensions (for snipptets, generated code, bloc, formz, etc)
+5. [Implementation](#implementation)
+6. [Extensions](#extensions)
 7. [Why?](#why?)
 8. [Contribute](#contribute)
 
@@ -302,6 +302,7 @@ As observed, we have 3 main folders:
 1. Custom Exceptions
 2. Bloc States
 
+[WIP]
 
 ## Why? <a name = "Why?"></a>
 
@@ -309,7 +310,7 @@ Bloc itself is an amazing concept and I thank [Felix Angelov](https://github.com
 
 What I thought is that bloc's and many other patterns lack a strict architectural pattern. There are many inconsistencies in examples and tutorials all over the internet and a lot of people find it hard to implement bloc their own way.
 
-So I came up with a stricter way of managing and organising a flutter project using bloc, that also comes with a directory structure.
+Initially, I just wanted to make an extension to help me with the boilerplate code and structuring, so I came up with a stricter way of managing and organising a flutter project using bloc, that also comes with a directory structure.
 
 Main points I made while creating this were:
 - Abstract everything as much as possible, allowing us a scalable, understandable and testable application
@@ -318,8 +319,6 @@ Main points I made while creating this were:
 - Reuse many components through out the apps
 
 As it is now, it still is a **work in progress** and I urge everyone to ask questions, clarifications and make suggestions.
-
-I aim to make this project a powerful design helping developers make complex applications by composing them of smaller components but also a simple enough so that much more people trying to get into Flutter can understand it.
 
 ## Contribute <a name = "Contribute"></a>
 
