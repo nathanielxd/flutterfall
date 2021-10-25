@@ -14,7 +14,7 @@ The goal is to allow you employ **clean architecture** in Flutter, simplifying t
 
 ## Based on
 
-Flutterfall is based on [bloc](https://pub.dev/packages/flutter_bloc) for stream-based state-management, [formz](https://pub.dev/packages/formz) for form representation input and [equatable](https://pub.dev/packages/equatable). It also features a [VSCode extension](https://github.com/nathanielxd/flutterfall/master/extensions/vscode) to help a quick implementation.
+Flutterfall is based on [bloc](https://pub.dev/packages/flutter_bloc) for stream-based state-management, [formz](https://pub.dev/packages/formz) for form representation input and [equatable](https://pub.dev/packages/equatable). It also features a [VSCode extension](https://github.com/nathanielxd/flutterfall/tree/master/extensions/vscode) to help a quick implementation.
 
 ## Requirements
 
@@ -43,9 +43,9 @@ my_flutter_app/
 * /lib/ contains folders each representing *a feature* (eg. /profile_creation/)
 * /packages/ has Flutter or Dart modules that are either a *widget library* (/my_flutter_theme/) or a domain of *models* and *data repositories* /(my_flutter_authentication)/.
 
-You can use [the extension](https://github.com/nathanielxd/flutterfall/master/extensions/vscode) to quickly create features or packages.
+You can use [the extension](https://github.com/nathanielxd/flutterfall/tree/master/extensions/vscode) to quickly create features or packages.
 
 # Documentation
 
 - [Full Documentation](https://github.com/nathanielxd/flutterfall/master/docs/DOCS.md).
-- [VSCode Extension](https://github.com/nathanielxd/flutterfall/master/extensions/vscode).
+- [VSCode Extension](https://github.com/nathanielxd/flutterfall/tree/master/extensions/vscode).
