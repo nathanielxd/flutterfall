@@ -1,175 +1,124 @@
 import * as lodash from "lodash";
 import * as changeCase from "change-case";
-import * as yaml from "js-yaml";
+import * as utils from '../utils/utils';
 
-import { InputBoxOptions, OpenDialogOptions, QuickPickOptions, Uri, window, workspace } from "vscode";
-import { existsSync, lstatSync, readFileSync, writeFile } from "fs";
-import mkdirp = require("mkdirp");
-
-import { getBarrelFileTemplate } from "../templates/barrel-file-template";
-import { getCubitTemplate } from "../templates/cubit/cubit-template";
-import { getCubitStateTemplate } from "../templates/cubit/cubit-state-template";
-import { getBlocTemplate } from "../templates/bloc/bloc-template";
-import { getBlocStateTemplate } from "../templates/bloc/bloc-state-template";
-import { getBlocEventTemplate } from "../templates/bloc/bloc-event-template";
-import { getPageTemplate } from "../templates/view/page-template";
-import { getViewTemplate } from "../templates/view/view-template";
-import { Pubspec } from "../models/pubspec";
+import { InputBoxOptions, QuickPickOptions, Uri, window, workspace } from "vscode";
+import { existsSync, lstatSync, writeFile } from "fs";
+import { getPubspecModuleFileTemplate } from "../templates/templates";
+import { reject } from "lodash";
+import { resolve } from "path";
 
 export const newModule = async (uri: Uri) => {
 
-  // Choose a module name.
-  const moduleName = await showModuleNamePrompt();
-  if (lodash.isNil(moduleName) || moduleName.trim() === "") {
-    window.showErrorMessage("The module name cannot be empty.");
-    return;
-  }
-
-  // Choose a module type.
-  const moduleType = await showModuleTypePrompt();
-  if(lodash.isNil(moduleType)) {
-    window.showErrorMessage("The module type cannot be empty.");
-    return;
-  }
-
-  // Choose a target directory if directory is null.
-  let targetDirectory;
-  if (lodash.isNil(lodash.get(uri, "fsPath")) || !lstatSync(uri.fsPath).isDirectory()) {
-    targetDirectory = await showTargetDirectoryPrompt();
-    if (lodash.isNil(targetDirectory)) {
-      window.showErrorMessage("Directory is not valid.");
-      return;
+    // Choose a module type.
+    const moduleType = await showModuleTypePrompt();
+    // Null-check module type.
+    if(lodash.isNil(moduleType)) {
+        window.showErrorMessage("The module type cannot be empty.");
+        return;
     }
-  } else {
-    targetDirectory = uri.fsPath;
-  }
 
-  try {
-    await generateModule(moduleName, moduleType, targetDirectory);
-    window.showInformationMessage(`Successfully Generated ${moduleName} Module.`);
-  } catch (error) {
-    window.showErrorMessage(`Error: ${error instanceof Error ? error.message : JSON.stringify(error)}`
-    );
-  }
+    var moduleName;
+    if(!moduleType.includes('Theme')) {
+        // Choose a module name only if the module is not a theme.
+        moduleName = await showModuleNamePrompt();
+        // Null check module name.
+        if (lodash.isNil(moduleName)) {
+            window.showErrorMessage("A data module's name cannot be empty.");
+            return;
+        }
+    }
+
+    // Choose a target directory if directory is null.
+    let targetDirectory;
+    if (lodash.isNil(lodash.get(uri, "fsPath")) || !lstatSync(uri.fsPath).isDirectory()) {
+        targetDirectory = await utils.showTargetDirectoryPrompt();
+        if (lodash.isNil(targetDirectory)) {
+        window.showErrorMessage("Directory is not valid.");
+        return;
+        }
+    } else {
+        targetDirectory = uri.fsPath;
+    }
+
+    try {
+        await generateModule(moduleName, moduleType, targetDirectory);
+        window.showInformationMessage(`Successfully Generated ${moduleName} Module.`);
+    } catch (error) {
+        window.showErrorMessage(`Error: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
+    }
 };
 
 function showModuleNamePrompt(): Thenable<string | undefined> {
-  const options: InputBoxOptions = {
-    prompt: "Module Name",
-    placeHolder: "authentication",
-  };
-  return window.showInputBox(options);
+    const options: InputBoxOptions = {
+        prompt: "Module Name",
+        placeHolder: "account",
+    };
+    return window.showInputBox(options);
 }
 
-function showModuleTypePrompt(): Thenable<string | undefined> {
-  const options: QuickPickOptions = {
-    title: "Choose the type of the module",
-    canPickMany: false,
-  };
-  return window.showQuickPick([
-    "View",
-    "View & Cubit", 
-    "View & BLoC",
-    "View, Cubit & Input", 
-    "View, BLoC & Input",
-    "Cubit",
-    "BLoC"
-  ], options);
+async function showModuleTypePrompt(): Promise<string | undefined> {
+    const options: QuickPickOptions = {
+        title: "Choose the type of the module",
+        canPickMany: false,
+    };
+    var picks = await window.showQuickPick([
+        "Data (Models, Repositories)",
+        "Theme (Widgets, UI)",
+    ], options);
+
+    return picks;
 }
 
-async function showTargetDirectoryPrompt(): Promise<string | undefined> {
-  const options: OpenDialogOptions = {
-    openLabel: "Select a folder to create the module in",
-    canSelectMany: false,
-    canSelectFolders: true,
-  };
+async function generateModule(moduleName: string | undefined, moduleType: string, targetDirectory: string) {
 
-  return window.showOpenDialog(options).then((uri) => {
-    if (lodash.isNil(uri) || lodash.isEmpty(uri)) {
-      return undefined;
+    const isTheme = moduleType.includes('Theme');
+    if(isTheme) {
+        moduleName = 'theme';
     }
-    return uri[0].fsPath;
-  });
-}
 
-async function generateModule(moduleName: string, moduleType: string, targetDirectory: string) {
-  const projectName = getProjectName(targetDirectory + '/..');
-  console.log(projectName);
-  const moduleDirectoryPath = `${targetDirectory}/${moduleName}`;
-  const viewDirectoryPath = `${moduleDirectoryPath}/view`;
-  const cubitDirectoryPath = `${moduleDirectoryPath}/cubit`;
-  const blocDirectoryPath = `${moduleDirectoryPath}/bloc`;
-  const inputDirectoryPath = `${moduleDirectoryPath}/input`;
+    moduleName = changeCase.lowerCase(moduleName!);
 
-  if (!existsSync(moduleDirectoryPath)) {
-    await createDirectory(moduleDirectoryPath);
-    if(moduleType.includes("View")) {
-      await createDirectory(viewDirectoryPath);
-      createFileTemplate(moduleName + "_page", getPageTemplate(moduleName, moduleType, projectName), viewDirectoryPath);
-      createFileTemplate(moduleName + "_view", getViewTemplate(moduleName, moduleType, projectName), viewDirectoryPath);
+    var projectName = await utils.getProjectName(targetDirectory + '/..');
+
+    if(lodash.isNil(projectName)) {
+        window.showErrorMessage('Could not create module due to missing project name');
+        return;
     }
-    if(moduleType.includes("Cubit")) {
-      await createDirectory(cubitDirectoryPath);
-      createFileTemplate(moduleName + "_cubit", getCubitTemplate(moduleName), cubitDirectoryPath);
-      createFileTemplate(moduleName + "_state", getCubitStateTemplate(moduleName), cubitDirectoryPath);
-    }
-    if(moduleType.includes("BLoC")) {
-      await createDirectory(blocDirectoryPath);
-      createFileTemplate(moduleName + "_bloc", getBlocTemplate(moduleName), blocDirectoryPath);
-      createFileTemplate(moduleName + "_state", getBlocStateTemplate(moduleName), blocDirectoryPath);
-      createFileTemplate(moduleName + "_event", getBlocEventTemplate(moduleName), blocDirectoryPath);
-    }
-    if(moduleType.includes("Input")) {
-      await createDirectory(inputDirectoryPath);
-    }
-  }
 
-  await createFileTemplate(moduleName, getBarrelFileTemplate(moduleName, moduleType), moduleDirectoryPath);
-}
+    projectName = projectName!.toLowerCase();
+    const moduleDirectoryPath = `${targetDirectory}/${projectName}_${moduleName}`;
+    const libDirectoryPath = moduleDirectoryPath + '/lib';
+    const srcDirectoryPath = libDirectoryPath + '/src';
 
-export function createDirectory(targetDirectory: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    mkdirp(targetDirectory, (error) => {
-      if (error) {
-        return reject(error);
-      }
-      resolve();
-    });
-  });
-}
+    if (!existsSync(moduleDirectoryPath)) {
+        await utils.createDirectory(moduleDirectoryPath);
+        await utils.createDirectory(libDirectoryPath);
+        await utils.createDirectory(srcDirectoryPath);
 
-export function createFileTemplate(moduleName: string, file: string, targetDirectory: string) {
-  const snakeCaseModuleName = changeCase.snakeCase(moduleName.toLowerCase());
-  const targetPath = `${targetDirectory}/${snakeCaseModuleName}.dart`;
-  if (existsSync(targetPath)) {
-    throw Error(`${snakeCaseModuleName}.dart already exists`);
-  }
-  return new Promise(async (resolve, reject) => {
-    writeFile(targetPath, file, "utf8",
-      (error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        resolve("");
-      }
-    );
-  });
-}
-
-function getProjectName(targetDirectory: string): string {
-    // Get current pubspec data.
-    let pubspecData = readFileSync(targetDirectory + "/pubspec.yaml", "utf8");
-    // Create new pubspec.
-    let pubspec = yaml.load(pubspecData) as Pubspec;
-
-    if(lodash.isNil(pubspec.name)) {
-        if(!lodash.isNil(workspace.name)) {
-            return workspace.name;
+        writePubspecFile(moduleDirectoryPath, projectName, moduleName);
+        if(isTheme) {
+            utils.createDartFile(`${projectName}_${moduleName}`, '', srcDirectoryPath);
+            utils.createDartFile(moduleName, `export 'src/${projectName}_${moduleName}.dart';`, libDirectoryPath);
         }
         else {
-            window.showErrorMessage("No initial pubspec or workspace is present.");
+            utils.createDartFile(moduleName, '', libDirectoryPath);
+            utils.createDirectory(srcDirectoryPath + '/models');
+            utils.createDirectory(srcDirectoryPath + '/repositories');
         }
     }
-    return pubspec.name;
+    else {
+        throw Error('There is already an existent module.');
+    }
+}
+
+function writePubspecFile(moduleDirectoryPath: string, projectName: string, moduleName: string) {
+    writeFile(moduleDirectoryPath + '/pubspec.yaml', getPubspecModuleFileTemplate(projectName, moduleName), 
+        (error) => {
+            if(error) {
+                reject(error);
+            }
+            resolve('');
+        }
+    );
 }

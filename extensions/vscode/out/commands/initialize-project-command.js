@@ -13,20 +13,17 @@ exports.initializeProject = void 0;
 const lodash = require("lodash");
 const yaml = require("js-yaml");
 const fs = require("fs");
+const utils = require("../utils/utils");
+const templates = require("../templates/templates");
 const vscode_1 = require("vscode");
-const pubspec_1 = require("../models/pubspec");
-const main_file_template_1 = require("../templates/main-file-template");
-const new_module_command_1 = require("./new-module-command");
-const app_view_file_template_1 = require("../templates/app/app-view-file-template");
-const app_file_template_1 = require("../templates/app/app-file-template");
-const app_barrel_file_template_1 = require("../templates/app/app-barrel-file-template");
+const pubspec_1 = require("../utils/pubspec");
 const initializeProject = (uri) => __awaiter(void 0, void 0, void 0, function* () {
     // Choose a target directory if directory is null.
     let targetDirectory;
     if (lodash.isNil(lodash.get(uri, "fsPath")) || !fs.lstatSync(uri.fsPath).isDirectory()) {
-        targetDirectory = yield showTargetDirectoryPrompt();
+        targetDirectory = yield utils.showTargetDirectoryPrompt();
         if (lodash.isNil(targetDirectory)) {
-            vscode_1.window.showErrorMessage("Directory is not valid.");
+            vscode_1.window.showErrorMessage("Directory has to be a Flutter app project directory.");
             return;
         }
     }
@@ -34,12 +31,11 @@ const initializeProject = (uri) => __awaiter(void 0, void 0, void 0, function* (
         targetDirectory = uri.fsPath;
     }
     try {
-        let withFirebase = yield showProjectTypePrompt();
-        if (lodash.isNil(withFirebase)) {
+        let needsFirebase = yield showProjectTypePrompt();
+        if (lodash.isNil(needsFirebase)) {
             vscode_1.window.showErrorMessage("The project type cannot be empty.");
             return;
         }
-        let needsFirebase = withFirebase === "With Firebase";
         let projectName = yield initializePubspec(targetDirectory, needsFirebase);
         yield initializeMain(targetDirectory, projectName, needsFirebase);
         vscode_1.window.showInformationMessage(`Successfully Generated Pubspec.yaml and main.dart.`);
@@ -76,42 +72,30 @@ function initializePubspec(targetDirectory, needsFirebase) {
 }
 function initializeMain(targetDirectory, projectName, needsFirebase) {
     return __awaiter(this, void 0, void 0, function* () {
-        createMainFileTemplate(targetDirectory, projectName, needsFirebase);
+        createMainFile(targetDirectory, projectName, needsFirebase);
         const appDirectory = targetDirectory + "/lib/app";
         const appViewDirectory = appDirectory + "/view";
-        yield (0, new_module_command_1.createDirectory)(appDirectory);
-        yield (0, new_module_command_1.createDirectory)(appViewDirectory);
-        yield (0, new_module_command_1.createFileTemplate)("app", (0, app_file_template_1.getAppTemplate)(projectName), appViewDirectory);
-        yield (0, new_module_command_1.createFileTemplate)("app_view", (0, app_view_file_template_1.getAppViewTemplate)(projectName), appViewDirectory);
-        yield (0, new_module_command_1.createFileTemplate)("app", (0, app_barrel_file_template_1.getAppBarrelFileTemplate)(), appDirectory);
-    });
-}
-function showTargetDirectoryPrompt() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const options = {
-            openLabel: "Select a folder to create the module in",
-            canSelectMany: false,
-            canSelectFolders: true,
-        };
-        return vscode_1.window.showOpenDialog(options).then((uri) => {
-            if (lodash.isNil(uri) || lodash.isEmpty(uri)) {
-                return undefined;
-            }
-            return uri[0].fsPath;
-        });
+        yield utils.createDirectory(appDirectory);
+        yield utils.createDirectory(appViewDirectory);
+        yield utils.createDartFile("app", templates.getAppTemplate(projectName), appViewDirectory);
+        yield utils.createDartFile("app_view", templates.getAppViewTemplate(projectName), appViewDirectory);
+        yield utils.createDartFile("app", templates.getAppBarrelFileTemplate(), appDirectory);
     });
 }
 function showProjectTypePrompt() {
-    const options = {
-        title: "Are you going to use Firebase in your project?",
-        canPickMany: false,
-    };
-    return vscode_1.window.showQuickPick(["With Firebase", "Without Firebase"], options);
+    return __awaiter(this, void 0, void 0, function* () {
+        const options = {
+            title: "Are you going to use Firebase in your project?",
+            canPickMany: false,
+        };
+        const withFirebase = yield vscode_1.window.showQuickPick(["With Firebase", "Without Firebase"], options);
+        return withFirebase === "With Firebase";
+    });
 }
-function createMainFileTemplate(targetDirectory, projectName, needsFirebase) {
+function createMainFile(targetDirectory, projectName, needsFirebase) {
     const targetPath = `${targetDirectory}/lib/main.dart`;
     return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-        fs.writeFile(targetPath, (0, main_file_template_1.getMainFileTemplate)(projectName, needsFirebase), "utf8", (error) => {
+        fs.writeFile(targetPath, templates.getMainFileTemplate(projectName, needsFirebase), "utf8", (error) => {
             if (error) {
                 reject(error);
                 return;

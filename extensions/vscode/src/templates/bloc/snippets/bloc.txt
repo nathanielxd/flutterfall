@@ -1,0 +1,16 @@
+import 'dart:async';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+
+part '${snakeCaseBlocName}_event.dart';
+part '${snakeCaseBlocName}_state.dart';
+
+class ${pascalCaseBlocName}Bloc extends Bloc<${blocEvent}, ${blocState}> {
+
+  ${pascalCaseBlocName}Bloc() : super(${pascalCaseBlocName}State());
+
+  @override
+  Stream<${blocState}> mapEventToState(${blocEvent} event) async* {
+    // TODO: implement mapEventToState
+  }
+}

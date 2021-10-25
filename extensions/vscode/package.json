@@ -1,10 +1,10 @@
 {
   "name": "flutterfall",
-  "displayName": "flutterfall",
-  "description": "A simple file generator for Flutter projects respecting the Flutterfall architecture.",
-  "version": "0.0.7",
+  "displayName": "Flutterfall",
+  "description": "A simple file and snippet generator for the Flutterfall architecture.",
+  "version": "0.1.0+2",
   "publisher": "nathanielxd",
-  "repository": "https://github.com/nathanielxd/flutterfall",
+  "repository": "https://github.com/nathanielxd/flutterfall/extensions/vscode",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -12,12 +12,17 @@
     "Other"
   ],
   "activationEvents": [
+    "onCommand:flutterfall.newFeature",
     "onCommand:flutterfall.newModule",
     "onCommand:flutterfall.initializeProject"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "flutterfall.newFeature",
+        "title": "Flutterfall: New Feature"
+      },
       {
         "command": "flutterfall.newModule",
         "title": "Flutterfall: New Module"
@@ -30,14 +35,19 @@
     "menus": {
       "explorer/context": [
         {
-          "command": "flutterfall.newModule",
-          "group": "flutterfallGroup@1",
-          "when": "explorerResourceIsFolder"
+            "command": "flutterfall.newFeature",
+            "group": "flutterfallGroup@1",
+            "when": "explorerResourceIsFolder"
         },
         {
-          "command": "flutterfall.initializeProject",
-          "group": "flutterfallGroup@1",
-          "when": "explorerResourceIsFolder"
+            "command": "flutterfall.newModule",
+            "group": "flutterfallGroup@1",
+            "when": "explorerResourceIsFolder"
+        },
+        {
+            "command": "flutterfall.initializeProject",
+            "group": "flutterfallGroup@1",
+            "when": "explorerResourceIsFolder"
         }
       ]
     }

@@ -9,38 +9,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createFileTemplate = exports.createDirectory = exports.newModule = void 0;
+exports.newModule = void 0;
 const lodash = require("lodash");
 const changeCase = require("change-case");
-const yaml = require("js-yaml");
+const utils = require("../utils/utils");
 const vscode_1 = require("vscode");
 const fs_1 = require("fs");
-const mkdirp = require("mkdirp");
-const barrel_file_template_1 = require("../templates/barrel-file-template");
-const cubit_template_1 = require("../templates/cubit/cubit-template");
-const cubit_state_template_1 = require("../templates/cubit/cubit-state-template");
-const bloc_template_1 = require("../templates/bloc/bloc-template");
-const bloc_state_template_1 = require("../templates/bloc/bloc-state-template");
-const bloc_event_template_1 = require("../templates/bloc/bloc-event-template");
-const page_template_1 = require("../templates/view/page-template");
-const view_template_1 = require("../templates/view/view-template");
+const templates_1 = require("../templates/templates");
+const lodash_1 = require("lodash");
+const path_1 = require("path");
 const newModule = (uri) => __awaiter(void 0, void 0, void 0, function* () {
-    // Choose a module name.
-    const moduleName = yield showModuleNamePrompt();
-    if (lodash.isNil(moduleName) || moduleName.trim() === "") {
-        vscode_1.window.showErrorMessage("The module name cannot be empty.");
-        return;
-    }
     // Choose a module type.
     const moduleType = yield showModuleTypePrompt();
+    // Null-check module type.
     if (lodash.isNil(moduleType)) {
         vscode_1.window.showErrorMessage("The module type cannot be empty.");
         return;
     }
+    var moduleName;
+    if (!moduleType.includes('Theme')) {
+        // Choose a module name only if the module is not a theme.
+        moduleName = yield showModuleNamePrompt();
+        // Null check module name.
+        if (lodash.isNil(moduleName)) {
+            vscode_1.window.showErrorMessage("A data module's name cannot be empty.");
+            return;
+        }
+    }
     // Choose a target directory if directory is null.
     let targetDirectory;
     if (lodash.isNil(lodash.get(uri, "fsPath")) || !(0, fs_1.lstatSync)(uri.fsPath).isDirectory()) {
-        targetDirectory = yield showTargetDirectoryPrompt();
+        targetDirectory = yield utils.showTargetDirectoryPrompt();
         if (lodash.isNil(targetDirectory)) {
             vscode_1.window.showErrorMessage("Directory is not valid.");
             return;
@@ -61,115 +60,65 @@ exports.newModule = newModule;
 function showModuleNamePrompt() {
     const options = {
         prompt: "Module Name",
-        placeHolder: "authentication",
+        placeHolder: "account",
     };
     return vscode_1.window.showInputBox(options);
 }
 function showModuleTypePrompt() {
-    const options = {
-        title: "Choose the type of the module",
-        canPickMany: false,
-    };
-    return vscode_1.window.showQuickPick([
-        "View",
-        "View & Cubit",
-        "View & BLoC",
-        "View, Cubit & Input",
-        "View, BLoC & Input",
-        "Cubit",
-        "BLoC"
-    ], options);
-}
-function showTargetDirectoryPrompt() {
     return __awaiter(this, void 0, void 0, function* () {
         const options = {
-            openLabel: "Select a folder to create the module in",
-            canSelectMany: false,
-            canSelectFolders: true,
+            title: "Choose the type of the module",
+            canPickMany: false,
         };
-        return vscode_1.window.showOpenDialog(options).then((uri) => {
-            if (lodash.isNil(uri) || lodash.isEmpty(uri)) {
-                return undefined;
-            }
-            return uri[0].fsPath;
-        });
+        var picks = yield vscode_1.window.showQuickPick([
+            "Data (Models, Repositories)",
+            "Theme (Widgets, UI)",
+        ], options);
+        return picks;
     });
 }
 function generateModule(moduleName, moduleType, targetDirectory) {
     return __awaiter(this, void 0, void 0, function* () {
-        const projectName = getProjectName(targetDirectory + '/..');
-        console.log(projectName);
-        const moduleDirectoryPath = `${targetDirectory}/${moduleName}`;
-        const viewDirectoryPath = `${moduleDirectoryPath}/view`;
-        const cubitDirectoryPath = `${moduleDirectoryPath}/cubit`;
-        const blocDirectoryPath = `${moduleDirectoryPath}/bloc`;
-        const inputDirectoryPath = `${moduleDirectoryPath}/input`;
-        if (!(0, fs_1.existsSync)(moduleDirectoryPath)) {
-            yield createDirectory(moduleDirectoryPath);
-            if (moduleType.includes("View")) {
-                yield createDirectory(viewDirectoryPath);
-                createFileTemplate(moduleName + "_page", (0, page_template_1.getPageTemplate)(moduleName, moduleType, projectName), viewDirectoryPath);
-                createFileTemplate(moduleName + "_view", (0, view_template_1.getViewTemplate)(moduleName, moduleType, projectName), viewDirectoryPath);
-            }
-            if (moduleType.includes("Cubit")) {
-                yield createDirectory(cubitDirectoryPath);
-                createFileTemplate(moduleName + "_cubit", (0, cubit_template_1.getCubitTemplate)(moduleName), cubitDirectoryPath);
-                createFileTemplate(moduleName + "_state", (0, cubit_state_template_1.getCubitStateTemplate)(moduleName), cubitDirectoryPath);
-            }
-            if (moduleType.includes("BLoC")) {
-                yield createDirectory(blocDirectoryPath);
-                createFileTemplate(moduleName + "_bloc", (0, bloc_template_1.getBlocTemplate)(moduleName), blocDirectoryPath);
-                createFileTemplate(moduleName + "_state", (0, bloc_state_template_1.getBlocStateTemplate)(moduleName), blocDirectoryPath);
-                createFileTemplate(moduleName + "_event", (0, bloc_event_template_1.getBlocEventTemplate)(moduleName), blocDirectoryPath);
-            }
-            if (moduleType.includes("Input")) {
-                yield createDirectory(inputDirectoryPath);
-            }
+        const isTheme = moduleType.includes('Theme');
+        if (isTheme) {
+            moduleName = 'theme';
         }
-        yield createFileTemplate(moduleName, (0, barrel_file_template_1.getBarrelFileTemplate)(moduleName, moduleType), moduleDirectoryPath);
-    });
-}
-function createDirectory(targetDirectory) {
-    return new Promise((resolve, reject) => {
-        mkdirp(targetDirectory, (error) => {
-            if (error) {
-                return reject(error);
+        moduleName = changeCase.lowerCase(moduleName);
+        var projectName = yield utils.getProjectName(targetDirectory + '/..');
+        if (lodash.isNil(projectName)) {
+            vscode_1.window.showErrorMessage('Could not create module due to missing project name');
+            return;
+        }
+        projectName = projectName.toLowerCase();
+        const moduleDirectoryPath = `${targetDirectory}/${projectName}_${moduleName}`;
+        const libDirectoryPath = moduleDirectoryPath + '/lib';
+        const srcDirectoryPath = libDirectoryPath + '/src';
+        if (!(0, fs_1.existsSync)(moduleDirectoryPath)) {
+            yield utils.createDirectory(moduleDirectoryPath);
+            yield utils.createDirectory(libDirectoryPath);
+            yield utils.createDirectory(srcDirectoryPath);
+            writePubspecFile(moduleDirectoryPath, projectName, moduleName);
+            if (isTheme) {
+                utils.createDartFile(`${projectName}_${moduleName}`, '', srcDirectoryPath);
+                utils.createDartFile(moduleName, `export 'src/${projectName}_${moduleName}.dart';`, libDirectoryPath);
             }
-            resolve();
-        });
-    });
-}
-exports.createDirectory = createDirectory;
-function createFileTemplate(moduleName, file, targetDirectory) {
-    const snakeCaseModuleName = changeCase.snakeCase(moduleName.toLowerCase());
-    const targetPath = `${targetDirectory}/${snakeCaseModuleName}.dart`;
-    if ((0, fs_1.existsSync)(targetPath)) {
-        throw Error(`${snakeCaseModuleName}.dart already exists`);
-    }
-    return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-        (0, fs_1.writeFile)(targetPath, file, "utf8", (error) => {
-            if (error) {
-                reject(error);
-                return;
+            else {
+                utils.createDartFile(moduleName, '', libDirectoryPath);
+                utils.createDirectory(srcDirectoryPath + '/models');
+                utils.createDirectory(srcDirectoryPath + '/repositories');
             }
-            resolve("");
-        });
-    }));
-}
-exports.createFileTemplate = createFileTemplate;
-function getProjectName(targetDirectory) {
-    // Get current pubspec data.
-    let pubspecData = (0, fs_1.readFileSync)(targetDirectory + "/pubspec.yaml", "utf8");
-    // Create new pubspec.
-    let pubspec = yaml.load(pubspecData);
-    if (lodash.isNil(pubspec.name)) {
-        if (!lodash.isNil(vscode_1.workspace.name)) {
-            return vscode_1.workspace.name;
         }
         else {
-            vscode_1.window.showErrorMessage("No initial pubspec or workspace is present.");
+            throw Error('There is already an existent module.');
         }
-    }
-    return pubspec.name;
+    });
+}
+function writePubspecFile(moduleDirectoryPath, projectName, moduleName) {
+    (0, fs_1.writeFile)(moduleDirectoryPath + '/pubspec.yaml', (0, templates_1.getPubspecModuleFileTemplate)(projectName, moduleName), (error) => {
+        if (error) {
+            (0, lodash_1.reject)(error);
+        }
+        (0, path_1.resolve)('');
+    });
 }
 //# sourceMappingURL=new-module-command.js.map

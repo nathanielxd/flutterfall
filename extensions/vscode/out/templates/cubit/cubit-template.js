@@ -13,6 +13,7 @@ part '${snakeCaseCubitName}_state.dart';
 
 class ${pascalCaseCubitName}Cubit extends Cubit<${cubitState}> {
   ${pascalCaseCubitName}Cubit() : super(${pascalCaseCubitName}State());
+  
 }`;
 }
 exports.getCubitTemplate = getCubitTemplate;

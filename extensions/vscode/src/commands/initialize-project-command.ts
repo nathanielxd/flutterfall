@@ -1,36 +1,32 @@
-import * as lodash from "lodash";
-import * as yaml from "js-yaml";
-import * as fs from "fs";
+import * as lodash from 'lodash';
+import * as yaml from 'js-yaml';
+import * as fs from 'fs';
+import * as utils from '../utils/utils';
+import * as templates from '../templates/templates';
 
-import { OpenDialogOptions, QuickPickOptions, Uri, window, workspace } from "vscode";
-import { Pubspec, Dependencies } from "../models/pubspec";
-import { getMainFileTemplate } from "../templates/main-file-template";
-import { createDirectory, createFileTemplate } from "./new-module-command";
-import { getAppViewTemplate } from "../templates/app/app-view-file-template";
-import { getAppTemplate } from "../templates/app/app-file-template";
-import { getAppBarrelFileTemplate } from "../templates/app/app-barrel-file-template";
+import { OpenDialogOptions, QuickPickOptions, Uri, window, workspace } from 'vscode';
+import { Dependencies, Pubspec } from '../utils/pubspec';
 
 export const initializeProject = async (uri: Uri) => {
-
     // Choose a target directory if directory is null.
     let targetDirectory;
     if (lodash.isNil(lodash.get(uri, "fsPath")) || !fs.lstatSync(uri.fsPath).isDirectory()) {
-        targetDirectory = await showTargetDirectoryPrompt();
+        targetDirectory = await utils.showTargetDirectoryPrompt();
         if (lodash.isNil(targetDirectory)) {
-            window.showErrorMessage("Directory is not valid.");
+            window.showErrorMessage("Directory has to be a Flutter app project directory.");
             return;
         }
-    } else {
+    }
+    else {
         targetDirectory = uri.fsPath;
     }
 
     try {
-        let withFirebase = await showProjectTypePrompt();
-        if(lodash.isNil(withFirebase)) {
+        let needsFirebase = await showProjectTypePrompt();
+        if(lodash.isNil(needsFirebase)) {
             window.showErrorMessage("The project type cannot be empty.");
             return;
         }
-        let needsFirebase = withFirebase === "With Firebase";
         let projectName = await initializePubspec(targetDirectory, needsFirebase);
         await initializeMain(targetDirectory, projectName, needsFirebase);
         window.showInformationMessage(`Successfully Generated Pubspec.yaml and main.dart.`);
@@ -66,53 +62,39 @@ async function initializePubspec(targetDirectory: string, needsFirebase: boolean
 }
 
 async function initializeMain(targetDirectory: string, projectName: string, needsFirebase: boolean) {
-    createMainFileTemplate(targetDirectory, projectName, needsFirebase);
+
+    createMainFile(targetDirectory, projectName, needsFirebase);
     const appDirectory = targetDirectory + "/lib/app";
     const appViewDirectory = appDirectory + "/view";
-    await createDirectory(appDirectory);
-    await createDirectory(appViewDirectory);
-    await createFileTemplate("app", getAppTemplate(projectName), appViewDirectory);
-    await createFileTemplate("app_view", getAppViewTemplate(projectName), appViewDirectory);
-    await createFileTemplate("app", getAppBarrelFileTemplate(), appDirectory);
+
+    await utils.createDirectory(appDirectory);
+    await utils.createDirectory(appViewDirectory);
+    await utils.createDartFile("app", templates.getAppTemplate(projectName), appViewDirectory);
+    await utils.createDartFile("app_view", templates.getAppViewTemplate(projectName), appViewDirectory);
+    await utils.createDartFile("app", templates.getAppBarrelFileTemplate(), appDirectory);
 }
 
-async function showTargetDirectoryPrompt(): Promise<string | undefined> {
+async function showProjectTypePrompt(): Promise<boolean> {
 
-    const options: OpenDialogOptions = {
-        openLabel: "Select a folder to create the module in",
-        canSelectMany: false,
-        canSelectFolders: true,
-    };
-  
-    return window.showOpenDialog(options).then((uri) => {
-        if (lodash.isNil(uri) || lodash.isEmpty(uri)) {
-            return undefined;
+  const options: QuickPickOptions = {
+    title: "Are you going to use Firebase in your project?",
+    canPickMany: false,
+  };
+
+  const withFirebase = await window.showQuickPick(["With Firebase", "Without Firebase"], options);
+  return withFirebase === "With Firebase";
+}
+
+function createMainFile(targetDirectory: string, projectName: string, needsFirebase: boolean) {
+  const targetPath = `${targetDirectory}/lib/main.dart`;
+  return new Promise(async (resolve, reject) => {
+    fs.writeFile(targetPath, templates.getMainFileTemplate(projectName, needsFirebase), "utf8",
+    (error) => {
+        if (error) {
+          reject(error);
+          return;
         }
-        return uri[0].fsPath;
+        resolve("");
     });
-}
-
-function showProjectTypePrompt(): Thenable<string | undefined> {
-
-    const options: QuickPickOptions = {
-      title: "Are you going to use Firebase in your project?",
-      canPickMany: false,
-    };
-
-    return window.showQuickPick(["With Firebase", "Without Firebase"], options);
-}
-
-function createMainFileTemplate(targetDirectory: string, projectName: string, needsFirebase: boolean) {
-    const targetPath = `${targetDirectory}/lib/main.dart`;
-    return new Promise(async (resolve, reject) => {
-        fs.writeFile(targetPath, getMainFileTemplate(projectName, needsFirebase), "utf8",
-            (error) => {
-                if (error) {
-                    reject(error);
-                    return;
-                }
-            resolve("");
-            }
-        );
-    });
+  });
 }
