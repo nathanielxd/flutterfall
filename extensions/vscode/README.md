@@ -1,4 +1,5 @@
-# flutterfall
+# Flutterfall
+https://flutterfall.dev
 
 VSCode extension for Flutterfall, a Flutter architectural design pattern based on BLoC.
 
@@ -6,12 +7,12 @@ VSCode extension for Flutterfall, a Flutter architectural design pattern based o
 
 You will need to have VSCode and Flutter installed on your system.
 
-## Features
+## Commands
 
-- Flutterfall Module: Quickly create an app feature;
-- Flutterfall Initialization: Initialize a project's pubspec.yaml and main.dart;
-- Flutterfall Package: Create a new module package for your models and repositories;
+- Flutterfall New Feature: Quickly create an app feature
+- Flutterfall New Module: Create a new module package
+- Flutterfall Initialize Project: Initialize a project's pubspec.yaml and main.dart
 
-## Why?
+## Documentation
 
-I made this so I can automate my implementation of a design pattern for Flutter. You can read more about Flutterfall here: https://flutterfall.ooo
+Please check out the [docs of Flutterfall](https://github.com/nathanielxd/flutterfall).

@@ -2,7 +2,7 @@
   "name": "flutterfall",
   "displayName": "Flutterfall",
   "description": "A simple file and snippet generator for the Flutterfall architecture.",
-  "version": "0.1.0+2",
+  "version": "0.1.2",
   "publisher": "nathanielxd",
   "repository": "https://github.com/nathanielxd/flutterfall/extensions/vscode",
   "engines": {

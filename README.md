@@ -1,6 +1,6 @@
 # Flutterfall
 
-A strict architectural design pattern for the Flutter framework.
+An architectural design pattern for the Flutter framework.
 
 ## Overview
 
@@ -18,7 +18,6 @@ Flutterfall is based on [bloc](https://pub.dev/packages/flutter_bloc) for stream
 
 ## Requirements
 
-- Flutter installed on your system
 - Intermediate knowledge of Flutter, streams and BLoC
 - (For the extension) VSCode installed on your system
 
@@ -26,7 +25,7 @@ If you are in doubt on how bloc works, I recommend [this article](https://www.di
 
 # Quick Start
 
-The general directory structure of a Flutter app looks like this:
+The general directory structure of a Flutterfall app looks similar to this:
 
 ```
 my_flutter_app/
