@@ -1,4 +1,4 @@
-# Flutterfall
+# Flutterfall Extension
 https://flutterfall.dev
 
 VSCode extension for Flutterfall, a Flutter architectural design pattern based on BLoC.
