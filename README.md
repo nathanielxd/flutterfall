@@ -41,11 +41,11 @@ my_flutter_app/
 ```
 
 * /lib/ contains folders each representing **a feature** (eg. /profile_creation/)
-* /packages/ has Flutter or Dart modules that are either a **widget library** (/my_flutter_theme/) or a domain of **models** and **data repositories** /(my_flutter_authentication)/.
+* /packages/ has Flutter or Dart modules that are either a **widget library** (/my_flutter_theme/) or a domain of **models** and **data repositories** (/my_flutter_authentication/).
 
 You can use [the extension](https://github.com/nathanielxd/flutterfall/tree/master/extensions/vscode) to quickly create features or packages.
 
 # Documentation
 
-- [Full Documentation](https://github.com/nathanielxd/flutterfall/master/docs/DOCS.md).
+- [Full Documentation](https://github.com/nathanielxd/flutterfall/tree/master/docs/DOCS.md).
 - [VSCode Extension](https://github.com/nathanielxd/flutterfall/tree/master/extensions/vscode).
