@@ -1,3 +1,4 @@
+![](docs/assets/artwork/logo.png)
 # Flutterfall
 
 An architectural design pattern for the Flutter framework.
