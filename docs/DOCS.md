@@ -96,7 +96,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
   final IAuthenticationRepository authenticationRepository;
 
-  const AuthenticationRepository({
+  const AuthenticationBloc({
     required this.authenticationRepository
   });
 }
