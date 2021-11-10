@@ -298,6 +298,9 @@ As observed, we have 3 main folders:
 1. [Counter](https://github.com/nathanielxd/flutterfall/tree/master/examples/counter_example)
 2. [Authentication](https://github.com/nathanielxd/flutterfall/tree/master/examples/authentication_example)
 
+**Featured Apps:**
+1. [Simple LAN Chat](https://github.com/nathanielxd/simple-lan-chat)
+
 **Quick resources:**
 1. Custom Exceptions
 2. Bloc States
