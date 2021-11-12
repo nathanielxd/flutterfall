@@ -6,12 +6,11 @@ This document serves the purpose to analyze the **architecture**, **structure** 
 
 1. [Overview](#overview)
 2. [Architecture](#architecture)
-3. [Directory Structure](#directory_structure)
+3. [Directory Structure](#directory-structure)
 4. [Examples](#examples)
-5. [Implementation](#implementation)
-6. [Extensions](#extensions)
-7. [Why?](#why?)
-8. [Contribute](#contribute)
+5. [Extensions](#extensions)
+6. [Why?](#why)
+7. [Contribute](#contribute)
 
 ## Overview
 
@@ -307,6 +306,9 @@ As observed, we have 3 main folders:
 2. Bloc States
 
 [WIP]
+
+## Extensions
+1. [VSCode Flutterfall Extension](https://github.com/nathanielxd/flutterfall/blob/master/extensions/vscode)
 
 ## Why?
 
