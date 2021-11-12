@@ -1,7 +1,7 @@
 ![](docs/assets/artwork/logo.png)
 # Flutterfall
 [![Extension Version](https://img.shields.io/badge/Extension-0.1.2-blue?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=nathanielxd.flutterfall) 
-[![Examples](https://img.shields.io/badge/Examples-3-darkgreen?style=for-the-badge)](https://github.com/nathanielxd/flutterfall/blob/master/docs/DOCS.md#examples) 
+[![Examples](https://img.shields.io/badge/Examples-4-darkgreen?style=for-the-badge)](https://github.com/nathanielxd/flutterfall/blob/master/docs/DOCS.md#examples-) 
 [![Docs](https://img.shields.io/badge/Docs-WIP-yellow?style=for-the-badge)](https://github.com/nathanielxd/flutterfall/tree/master/docs/DOCS.md) 
 
 An architectural design pattern for the Flutter framework.
