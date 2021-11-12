@@ -1,5 +1,6 @@
 # Flutterfall Extension
-https://flutterfall.dev
+[![](https://img.shields.io/badge/github-flutterfall-yellow?style=for-the-badge)](https://github.com/nathanielxd/flutterfall)
+[![](https://img.shields.io/badge/marketplace-vscode-blue?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=nathanielxd.flutterfall)
 
 VSCode extension for Flutterfall, a Flutter architectural design pattern based on BLoC.
 
