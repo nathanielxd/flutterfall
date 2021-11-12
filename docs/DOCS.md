@@ -13,7 +13,7 @@ This document serves the purpose to analyze the **architecture**, **structure** 
 7. [Why?](#why?)
 8. [Contribute](#contribute)
 
-## Overview <a name = "overview"></a>
+## Overview
 
 Flutterfall is an architectural design pattern uses bloc to create an architecture featuring:
 
@@ -22,7 +22,7 @@ Flutterfall is an architectural design pattern uses bloc to create an architectu
 - Treatment of models and data providers as microservices separate from the main application
 - Abstraction of data repositories allowing modular backend implementation
 
-## Architecture <a name = "architecture"></a>
+## Architecture
 
 ![](assets/diagrams/General_Module-Feature_front.png)
 
@@ -156,7 +156,7 @@ Tip: UI components throughout the app are can be referencing themselves. Only bl
 
 ![](assets/diagrams/Advanced_Module-Feature.png)
 
-## Directory Structure <a name = "directory_structure"></a>
+## Directory Structure
 
 To make an idea of how a project using the Flutterfall's architecture concept looks like in terms of folder hierarchy, see the following expanded tree:
 
@@ -208,7 +208,7 @@ The _packages/_ folder contain directories each representing a **module** that e
 
 Treating packages as microservices is beneficial to the overall structure therefore it is also allowed to host them somewhere separate, for example on multiple github repositories. The _/packages_ folder only contains **local** packages.
 
-### Feature Directory <a name = "feature_directory"></a>
+### Feature Directory
 
 A feature directory contains everything regarding that specific functionality. This is where you find your **view** and **logic**, each in it&#39;s own folder:
 
@@ -229,7 +229,7 @@ export 'input/password.dart';
 
 > **Each folder and file should be respecting the snake case style** _(profile\_creation/, profile\_creation\_page.dart)._
 
-### View Directory <a name = "view_directory"></a>
+### View Directory
 
 The view directory relates only to the specific functionality. It must have 2 files:
 
@@ -238,7 +238,7 @@ The view directory relates only to the specific functionality. It must have 2 fi
 
 ![](assets/screenshots/view_dir_example.png)
 
-### BLoC Directory <a name = "bloc_directory"></a>
+### BLoC Directory
 
 You will write your feature-specific logic in a folder named &quot;cubit&quot; or &quot;bloc&quot;. Normally, a bloc contains 3 files: the bloc itself, the state and the event. A cubit will only have the cubit and the state. Eg. _authentication\_bloc.dart, authentication\_state.dart, authentication\_event.dart_.
 
@@ -268,7 +268,7 @@ Overall, a feature directory should look similar to this:
 
 ![](assets/screenshots/feature_full_dir_example.png)
 
-### Module Directory <a name="module_directory"></a>
+### Module Directory
 
 As previously mentioned, we consider modules - Flutter or Dart packages that we use in our app. To persist abstraction as much as possible, our data services, repositories and models will be separated into these packages; same with our theme library.
 
@@ -292,7 +292,7 @@ As observed, we have 3 main folders:
 - repositories - data service for our module - abstracted into an interface and implementations
 - _exceptions_ - if you want to use custom exceptions (example)
 
-## Examples <a name = "examples"></a>
+## Examples
 
 **App examples:**
 1. [Counter](https://github.com/nathanielxd/flutterfall/tree/master/examples/counter_example)
@@ -308,7 +308,7 @@ As observed, we have 3 main folders:
 
 [WIP]
 
-## Why? <a name = "Why?"></a>
+## Why?
 
 Bloc itself is an amazing concept and I thank [Felix Angelov](https://github.com/felangel) and the Flutter community for making the awesome state-management library.
 
@@ -324,6 +324,6 @@ Main points I made while creating this were:
 
 As it is now, it still is a **work in progress** and I urge everyone to ask questions, clarifications and make suggestions.
 
-## Contribute <a name = "Contribute"></a>
+## Contribute
 
 This project still requires attention and I'd love to get everyone's input, suggestions and feedback on it. Please do not hesitate to contribute or contact me regarding absolutely anything at [me@nathans.dev](mailto:me@nathans.dev).
