@@ -300,6 +300,7 @@ As observed, we have 3 main folders:
 
 **Featured Apps:**
 1. [Simple LAN Chat](https://github.com/nathanielxd/simple-lan-chat)
+2. [Personal Portfolio](https://github.com/nathanielxd/personal-website)
 
 **Quick resources:**
 1. Custom Exceptions
