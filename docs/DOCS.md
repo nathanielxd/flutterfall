@@ -156,7 +156,7 @@ UI components throughout the app can reference themselves. Only bloc-to-bloc is 
 
 ## Directory Structure
 
-To make an idea of how a project using the BRUT architecture concept looks like in terms of folder hierarchy, see the following expanded tree:
+To make an idea of how a project using the BRUT architecture looks like in terms of folder hierarchy, see the following expanded tree:
 
 ```
 .
@@ -199,80 +199,133 @@ To make an idea of how a project using the BRUT architecture concept looks like 
     └── pubspec.yaml
 ```
 
+### Breakdown
+
 The `lib/features` folder must contain directories, each representing a piece of functionality or **feature**. 
+```
+lib/
+└── features/
+    ├── app/
+    ├── authentication/
+    ├── profile_creation/
+    └── settings/
+```
+---
 
 The `lib/` directory must contain your app's entry points (e.g., `main_development.dart`), localisation files, and other plugins and extensions.
 
-![](assets/screenshots/lib_dir_example.png)
+```
+lib/
+├── features/
+├── l10n/
+├── plugins/
+├── main_development.dart
+├── main_staging.dart
+└── main_production.dart
+```
+---
 
 The `packages/` folder contains directories, each representing a module that exposes models, data repositories, or a theme library. Custom packages are generally made solely for the project.
 
-![](assets/screenshots/packages_dir_example.png)
+```
+packages/
+├── my_app_auth/
+├── my_app_notifications/
+├── my_app_spaceships/
+└── my_app_theme/
+```
 
 Treating packages as microservices benefits the overall structure; therefore, it is also allowed to host them somewhere separate, for example, on multiple GitHub repositories. The `packages/` folder only contains local packages.
 
-### Feature Directory
+---
 
-A feature directory contains everything regarding that specific functionality. This is where you find your **view** and **logic**, each in it&#39;s own folder:
+### Feature
 
-![](assets/screenshots/auth_dir_example.png)
+A feature directory contains everything regarding that specific piece of functionality. This is where you find your view and logic.
 
-A barrel file (`auth.dart`) is also present, exporting all the files:
-
-```dart
-export 'view/auth_page.dart';
-export 'view/auth_view.dart';
-
-export 'bloc/auth_bloc.dart';
-
-export 'input/email.dart';
-export 'input/password.dart';
+```
+authentication/
+├── cubit/
+│   ├── authentication_cubit.dart
+│   └── authentication_state.dart
+├── input/
+│   ├── email_input.dart
+│   └── password_input.dart
+├── view/
+│   ├── authentication_page.dart
+│   └── authentication_view.dart
+├── widgets/
+│   └── authentication_bar_widget.dart
+└── authentication.dart
 ```
 
-Each folder and file should follow the snake case convention (e.g. profile_creation, profile_creation_page.dart).
 
-### View Directory
+A barrel file (`auth.dart`) is also present, exporting all the files.
 
-The view directory only has two files:
+```dart
+export 'view/authentication_page.dart';
+export 'view/authentication_view.dart';
+export 'cubit/authentication_cubit.dart';
+export 'input/email_input.dart';
+export 'input/password_input.dart';
+export 'widgets/authentication_bar_widget.dart';
+```
 
-- View (`auth_view.dart`) - building UI and widgets
-- Page (`auth_page.dart`) - exposing logic providers and routing
+All items should follow the snake case convention (e.g. `profile_creation/`, `profile_creation_page.dart`).
 
-![](assets/screenshots/view_dir_example.png)
+### View
 
-### BLoC Directory
+The view directory has two files:
+- View (`*_view.dart`) - building UI and widgets
+- Page (`*_page.dart`) - exposing logic providers and routing
 
-You will write your feature-specific logic in a folder named &quot;cubit&quot; or &quot;bloc&quot;. Normally, a bloc contains three files: the BLoC, the state and the event. A cubit will only have the cubit and the state. Eg. _auth\_bloc.dart, auth\_state.dart, auth\_event.dart_.
+```
+view/
+├── counter_page.dart
+└── counter_view.dart
+```
+
+### BLoC
+
+You will write your feature-specific logic in a folder named `cubit/` or `bloc/`. Normally, a BLoC contains three files: the BLoC file, the state and the event. A cubit will only have the cubit and the state (e.g. `*_bloc.dart`, `*_state.dart`).
 
 BRUT standards always prefer using cubits, as logic should be simple enough. Again, this framework's philosophy is simplicity over everything. Logic pieces should be self-explanatory.
 
-![](assets/screenshots/bloc_dir_example.png)
+```
+cubit/
+├── counter_cubit.dart
+└── counter_state.dart
+```
 
-### Input Directory
+### Input
 
-If your feature contains text fields for user input, a directory `input/` will also be present. Every field type must have it&#39;s own [formz](https://pub.dev/packages/formz) file (e.g. email fields will use an `EmailInput` formz class).
+If your feature contains text fields for user input, a directory `input/` will also be present. Every field type must have it's own [formz](https://pub.dev/packages/formz) file (e.g. email fields will use an `EmailInput` formz class).
 
-![](assets/screenshots/input_dir_example.png)
+```
+input/
+├── email_input.dart
+└── password_input.dart
+```
 
-### Widgets Directory
+### Widgets
 
-Widgets used inside the view are located inside a `widgets` folder.
+Widgets used inside the view are located in a `widgets` folder.
 
-![](assets/screenshots/widgets_dir_example.png)
+```
+widgets/
+├── authentication_logo.dart
+└── authentication_tab.dart
+```
 
-### Config Directory
+### Config
 
-A feature might need a configuration or static data. This should go into it&#39;s own `config` folder.
+A feature might need a configuration or static data. This should go into it's own `config` folder.
 
-### Other Directories
+### Others
 
 These are the most common folders you will typically find inside a feature, covering most of your needs. If necessary, you can create additional folders. 
 
-**Example (feature tree)**
-
-![](assets/screenshots/feature_full_dir_example.png)
-
-### Module Directory
+## Module
 
 As previously mentioned, we consider modules to be Flutter or Dart packages that we use in our app. To persist abstraction as much as possible, our data services, repositories, and models will be separated into these packages, as will our theme library.
 
@@ -280,21 +333,111 @@ These modules can be located inside the Flutter app directory or in a separate l
 
 A packages directory situated inside your Flutter app should look similar to the example below:
 
-![](assets/screenshots/packages_dir_example_2.png)
+```
+packages/
+├── my_app_auth
+├── ...
+└── my_app_theme
+```
 
-A theme package is a Flutter library that contains all the custom widgets and theme data used in your app.
+### Theme
 
-![](assets/screenshots/theme_package_dir_example.png)
+A theme package is a Flutter library that contains all the custom widgets and theme data used in your app, such as:
+
+- reusable components and widgets
+- stylistic elements such as themes, color schemes and typography
+- plugins and extensions
+- layout units such as static values used in widget padding
+
+**Example**
+```
+my_app_theme/
+├── lib/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── styles/
+│   │   ├── layout/
+│   │   └── plugins/
+│   ├── components.dart
+│   ├── styles.dart
+│   ├── layout.dart
+│   ├── plugins.dart
+│   └── my_app_theme.dart
+└── pubspec.yaml
+```
+
+**Components**
+The components folder holds all widgets used throughout the app such as buttons and text fields. App components are styled with the app brand and reusable.
+
+```
+components/
+├── scaffolding/
+├── buttons/
+└── text_fields/
+```
+
+**Styles**
+Stylistic elements that define how the app looks. This include typography, color schemes and themes. Especially useful if the app uses more than one theme or set of colors.
+
+```
+styles/
+├── color_scheme.dart
+├── typography.dart
+└── style_base.dart
+```
+
+Can be used in conjuction with packages such as [easy_dynamic_theme](https://pub.dev/packages/easy_dynamic_theme) to offer a variety of color schemes.
+
+**Plugins**
+Optionally, you may want to expose useful plugins such as extensions on colors and `BuildContext`. Such an example is:
+
+```
+plugins/
+├── build_context_extension.dart
+└── color_extension.dart
+```
+
+The `build_context_extension.dart` file is a simple extension that allows you to get the app themes directly from the context when building the app (e.g. `context.colorScheme.primary`).
+
+(!) Reminder that these helper files are automatically generated by the CLI tool.
+
+**Layout**
+Optionally, you may want to include static variables used to build layout inside your app.
+
+```
+layout/
+├── breakpoints.dart
+└── spacing.dart
+```
+
+### Data Provider
 
 A data package is a standard data provider that exposes models and repositories for your use. A repository can access data on a local disk or the Internet.
 
-![](assets/screenshots/data_package_dir_example.png)
+**Example**
+```
+my_app_authentication/
+├── lib/
+│   ├── src/
+│   │   ├── exceptions/
+│   │   │   └── authentication_exception.dart
+│   │   ├── models/
+│   │   │   ├── user_profile.dart
+│   │   │   └── user_account.dart
+│   │   ├── apis/
+│   │   │   ├── authentication_api.dart
+│   │   │   ├── firebase_authentication_api.dart
+│   │   │   └── mocked_authentication_api.dart
+│   │   └── authentication_repository.dart
+│   └── my_app_authentication.dart
+└── pubspec.yaml
+```
 
 As observed, we have three main folders:
 
-- models - models specific to our module
-- repositories - data service for our module - abstracted into an interface and implementations
-- exceptions - if you want to use custom exceptions (example)
+- models - data models providing serialization for our apis
+- apis - data services for our module - separated into an interface and implementations
+- exceptions - if you want to use custom exceptions
 
 ## Examples
 
@@ -302,18 +445,12 @@ As observed, we have three main folders:
 1. [Simple LAN Chat](https://github.com/nathanielxd/simple-lan-chat)
 2. [Lethologica](https://github.com/nathanielxd/lethologica)
 
-**Quick resources:**
-1. Custom Exceptions
-2. Bloc States
-
-[WIP]
-
 ## CLI
 WIP
 
 ## Why?
 
-Bloc itself is an amazing concept, and I thank [Felix Angelov](https://github.com/felangel) and the Flutter community for making the excellent state-management library.
+Bloc itself is an amazing concept, and I thank [Felix Angelov](https://github.com/felangel) and the Flutter community for making such an excellent state-management library.
 
 What I thought is that blocs and many other patterns lack a strict architectural pattern. There are many inconsistencies in examples and tutorials all over the internet, and many people find it hard to implement blocs their own way.
 
