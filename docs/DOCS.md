@@ -1,31 +1,31 @@
 # Documentation
 
-This document serves the purpose to analyze the **architecture**, **structure** and **implementation** of the architectural design pattern Flutterfall.
+This document serves the purpose to analyze the **architecture**, **structure** and **implementation** of the architectural design pattern BRUT.
 
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Architecture](#architecture)
+2. [General Architecture](#general-architecture)
 3. [Directory Structure](#directory-structure)
 4. [Examples](#examples)
-5. [Extensions](#extensions)
+5. [CLI](#cli)
 6. [Why?](#why)
 7. [Contribute](#contribute)
 
 ## Overview
 
-Flutterfall is an architectural design pattern uses bloc to create an architecture featuring:
+BRUT is an architectural design pattern uses bloc to create an architecture featuring:
 
 - Separation of models, logic and view
 - A firm and consistent directory structure easy to understand
 - Treatment of models and data providers as microservices separate from the main application
 - Abstraction of data repositories allowing modular backend implementation
 
-## Architecture
+## General Architecture
 
 ![](assets/diagrams/General_Module-Feature_front.png)
 
-By using the bloc pattern, we separate our application in 3 layers:
+By using the bloc pattern we separate our application in 3 layers:
 - Presentation View
 - Business Logic
 - Data
@@ -33,8 +33,8 @@ By using the bloc pattern, we separate our application in 3 layers:
   - Repositories
 
 We treat and organise these layers as such:
-- A **feature** is a congregation of *business logic* and *presentation*
-- A **module** is a microservice package consisting of *models* and *data repositories* that feeds into multiple features
+- A **feature** is a 1-to-1 correspondence of *business logic* and *presentation*
+- A **module** is a package that acts as a microservice consisting of *models* and *data repositories* that feed into multiple features
 
 A general relation between data and features can be observed in the following diagram:
 
@@ -55,7 +55,7 @@ These packages can be either stored in a directory - */packages* or */modules* i
 **Scalable**: For each data source there MUST be an abstract repository **interface** that is implemented by one or more repositories. This allows us to implement multiple repositories (eg. Firebase, RESTful, Mocked, Local Storage) and switch them whenever we need to or migrate to another provider, ensuring scalabilty.
 
 ```dart
-abstract class IAuthenticationRepository {
+abstract class AuthenticationApi {
   /// Get stream of current user.
   Stream<User> get stream;
   /// Get current user.
@@ -157,44 +157,47 @@ Tip: UI components throughout the app are can be referencing themselves. Only bl
 
 ## Directory Structure
 
-To make an idea of how a project using the Flutterfall's architecture concept looks like in terms of folder hierarchy, see the following expanded tree:
+To make an idea of how a project using the BRUT architecture concept looks like in terms of folder hierarchy, see the following expanded tree:
 
 ```
-my_flutter_app/
-├─ lib/
-│  ├─ app/
-│  ├─ authentication/
-│  │  ├─ bloc/
-│  │  │  ├─ authentication_bloc.dart
-│  │  │  ├─ authentication_state.dart
-│  │  │  ├─ authentication_event.dart
-│  │  ├─ input/
-│  │  │  ├─ email.dart
-│  │  │  ├─ password.dart
-│  │  ├─ view/
-│  │  │  ├─ authentication_page.dart
-│  │  │  ├─ authentication_view.dart
-│  │  ├─ widgets/
-│  │  │  ├─ authentication_tab_widget.dart
-│  │  ├─ authentication.dart
-│  ├─ profile_creation/
-│  ├─ main.dart
-├─ packages/
-│  ├─ my_authentication/
-│  │  ├─ lib/
-│  │  │  ├─ src/
-│  │  │  │  ├─ models/
-│  │  │  │  │  ├─ user_account.dart
-│  │  │  │  ├─ exceptions/
-│  │  │  │  │  ├─ authentication_exception.dart
-│  │  │  │  ├─ repositories/
-│  │  │  │  │  ├─ authentication_repository_interface.dart
-│  │  │  │  │  ├─ mocked_authentication_repository.dart
-│  │  │  │  │  ├─ firebase_authentication_repository.dart
-│  │  │  ├─ authentication.dart
-│  │  ├─ pubspec.yaml
-│  ├─ my_theme/
-├─ pubspec.yaml
+.
+└── my_flutter_app/
+    ├── lib/
+    │   ├── features/
+    │   │   ├── app
+    │   │   ├── auth/
+    │   │   │   ├── cubit/
+    │   │   │   │   ├── auth_cubit.dart
+    │   │   │   │   └── auth_state.dart
+    │   │   │   ├── input/
+    │   │   │   │   ├── email_input.dart
+    │   │   │   │   └── password_input.dart
+    │   │   │   ├── view/
+    │   │   │   │   ├── auth_page.dart
+    │   │   │   │   └── auth_view.dart
+    │   │   │   ├── widgets/
+    │   │   │   │   └── auth_tab_widget.dart
+    │   │   │   └── auth.dart
+    │   │   └── profile_creation
+    │   ├── l10n
+    │   └── plugins
+    ├── packages/
+    │   ├── my_authentication/
+    │   │   ├── lib/
+    │   │   │   ├── src/
+    │   │   │   │   ├── models/
+    │   │   │   │   │   └── user_account.dart
+    │   │   │   │   ├── exceptions/
+    │   │   │   │   │   └── auth_exception.dart
+    │   │   │   │   ├── apis/
+    │   │   │   │   │   ├── auth_api.dart
+    │   │   │   │   │   ├── firebase_auth_api.dart
+    │   │   │   │   │   └── mocked_auth_api.dart
+    │   │   │   │   └── auth_repository.dart
+    │   │   │   └── my_authentication.dart
+    │   │   └── pubspec.yaml
+    │   └── my_theme
+    └── pubspec.yaml
 ```
 
 The _lib/_ folder must contain directories each representing a **piece of functionality** or **feature** and finally the entry-point of your app, _main.dart_:
@@ -213,18 +216,17 @@ A feature directory contains everything regarding that specific functionality. T
 
 ![](assets/screenshots/auth_dir_example.png)
 
-A barrel file (_authentication.dart)_ is also present, exporting all the files:
+A barrel file (_auth.dart)_ is also present, exporting all the files:
 
 ```dart
-export 'view/authentication_page.dart';
-export 'view/authentication_view.dart';
+export 'view/auth_page.dart';
+export 'view/auth_view.dart';
 
-export 'bloc/authentication_bloc.dart';
+export 'bloc/auth_bloc.dart';
 
 export 'input/email.dart';
 export 'input/password.dart';
 ```
-
 
 > **Each folder and file should be respecting the snake case style** _(profile\_creation/, profile\_creation\_page.dart)._
 
@@ -232,14 +234,14 @@ export 'input/password.dart';
 
 The view directory relates only to the specific functionality. It must have 2 files:
 
-- View (_authentication\_view.dart_) - containing **UI & Widgets**
-- Page (_authentication\_page.dart_) - exposing logic **providers** & routing to the view
+- View (_auth\_view.dart_) - containing **UI & Widgets**
+- Page (_auth\_page.dart_) - exposing logic **providers** & routing
 
 ![](assets/screenshots/view_dir_example.png)
 
 ### BLoC Directory
 
-You will write your feature-specific logic in a folder named &quot;cubit&quot; or &quot;bloc&quot;. Normally, a bloc contains 3 files: the bloc itself, the state and the event. A cubit will only have the cubit and the state. Eg. _authentication\_bloc.dart, authentication\_state.dart, authentication\_event.dart_.
+You will write your feature-specific logic in a folder named &quot;cubit&quot; or &quot;bloc&quot;. Normally, a bloc contains 3 files: the bloc itself, the state and the event. A cubit will only have the cubit and the state. Eg. _auth\_bloc.dart, auth\_state.dart, auth\_event.dart_.
 
 ![](assets/screenshots/bloc_dir_example.png)
 
@@ -293,13 +295,9 @@ As observed, we have 3 main folders:
 
 ## Examples
 
-**App examples:**
-1. [Counter](https://github.com/nathanielxd/flutterfall/tree/master/examples/counter_example)
-2. [Authentication](https://github.com/nathanielxd/flutterfall/tree/master/examples/authentication_example)
-
 **Featured Apps:**
 1. [Simple LAN Chat](https://github.com/nathanielxd/simple-lan-chat)
-2. [Personal Portfolio](https://github.com/nathanielxd/personal-website)
+2. [Lethologica](https://github.com/nathanielxd/lethologica)
 
 **Quick resources:**
 1. Custom Exceptions
@@ -307,8 +305,8 @@ As observed, we have 3 main folders:
 
 [WIP]
 
-## Extensions
-1. [VSCode Flutterfall Extension](https://github.com/nathanielxd/flutterfall/blob/master/extensions/vscode)
+## CLI
+WIP
 
 ## Why?
 
@@ -328,4 +326,4 @@ As it is now, it still is a **work in progress** and I urge everyone to ask ques
 
 ## Contribute
 
-This project still requires attention and I'd love to get everyone's input, suggestions and feedback on it. Please do not hesitate to contribute or contact me regarding absolutely anything at [me@nathans.dev](mailto:me@nathans.dev).
+This project still requires attention and I'd love to get everyone's input, suggestions and feedback on it. Please do not hesitate to contribute or contact me regarding absolutely anything at [dragusinnathaniel@gmail.com](mailto:dragusinnathaniel@gmail.com).

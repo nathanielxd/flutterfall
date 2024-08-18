@@ -10,20 +10,20 @@ An architectural design pattern for the Flutter framework.
 - Separation of models, logic and view
 - A firm and consistent directory structure easy to understand
 - Treatment of models and data providers as microservices separate from the main application
-- Abstraction of data repositories allowing modular backend implementation
+- Abstraction of data repositories, allowing modular backend implementation
 
-The goal is to allow you employ **clean architecture** in Flutter, simplifying the separation of code into independent layers. These rules will ensure that your project is scalable, easy to read and consistent while maintaining simplicity.
+The goal is to allow you to employ clean architecture in Flutter, simplifying the separation of code into independent layers. These rules will ensure that your project is scalable, easy to read, and consistent while maintaining simplicity.
 
 **Based on**
 
-Flutterfall is based on [bloc](https://pub.dev/packages/flutter_bloc) for stream-based state-management, [formz](https://pub.dev/packages/formz) for form representation input and [equatable](https://pub.dev/packages/equatable). It also features a [VSCode extension](https://github.com/nathanielxd/flutterfall/tree/master/extensions/vscode) to help a quick implementation.
+Flutterfall is based on [bloc](https://pub.dev/packages/flutter_bloc) for stream-based state-management, [formz](https://pub.dev/packages/formz) for form representation input and [equatable](https://pub.dev/packages/equatable).
 
 ## Requirements
 
 - Intermediate knowledge of Flutter, streams and BLoC
-- (For the extension) VSCode installed on your system
+- (For the BRUT CLI) [Mason CLI](https://pub.dev/packages/mason_cli) installed on your system
 
-If you are in doubt on how bloc works, I recommend [this article](https://www.didierboelens.com/2018/08/reactive-programming-streams-bloc/).
+If you doubt how bloc works, I recommend [this article](https://www.didierboelens.com/2018/08/reactive-programming-streams-bloc/).
 
 # Quick Start
 
@@ -48,7 +48,7 @@ my_flutter_app/
 ```
 
 * /lib/features contains folders each representing **a feature** (eg. /profile_creation/)
-* /packages/ has Flutter or Dart modules that are either a **widget library** (/my_flutter_theme/) or a domain of **models** and **data repositories** (/my_flutter_authentication/).
+* /packages/ has Flutter or Dart modules as either a **widget library** (/my_flutter_theme/) or a domain of **models** and **data repositories** (/my_flutter_authentication/).
 
 You can use [the cli](https://github.com/nathanielxd/brut/tree/main/cli/README.md) to quickly create features or packages.
 
