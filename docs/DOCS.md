@@ -1,6 +1,6 @@
 # Documentation
 
-This document serves the purpose to analyze the **architecture**, **structure** and **implementation** of the architectural design pattern BRUT.
+This document analyzes the architecture, structure, and implementation of the architectural design pattern BRUT.
 
 ## Table of Contents
 
@@ -14,18 +14,18 @@ This document serves the purpose to analyze the **architecture**, **structure** 
 
 ## Overview
 
-BRUT is an architectural design pattern uses bloc to create an architecture featuring:
+BRUT is an architectural design pattern that uses BLoC to create an architecture featuring:
 
 - Separation of models, logic and view
-- A firm and consistent directory structure easy to understand
+- A firm and consistent directory structure that is easy to understand
 - Treatment of models and data providers as microservices separate from the main application
-- Abstraction of data repositories allowing modular backend implementation
+- Abstraction of data repositories, allowing modular backend implementation
 
 ## General Architecture
 
 ![](assets/diagrams/General_Module-Feature_front.png)
 
-By using the bloc pattern we separate our application in 3 layers:
+By using the bloc pattern, we separate our application into three layers:
 - Presentation View
 - Business Logic
 - Data
@@ -42,25 +42,24 @@ A general relation between data and features can be observed in the following di
 
 ### Data Layer
 
-The data layer is our module layer. A data module contains **models**, **data sources** and **data repositories** that provide either real or mocked data to our application.
+The data layer is our module layer. A data module contains **models**, **data sources**, and **data repositories** that provide our application with either real or mocked data.
 
-**Reusable**: Treating data layers as microservices help us with reuseability through multiple projects and is generally a good rule for clean architecture. These services are basic Flutter or Dart **packages**, then referenced in our main app's pubspec.yaml.
-
+**Reusable**: Treating data layers as microservices helps us with reusability across multiple projects and is generally a good rule for clean architecture. These services are basic Flutter or Dart **packages**, then referenced in our main app's `pubspec.yaml` file.
 ![](assets/screenshots/packages_dir_example.png)
 
-These packages can be either stored in a directory - */packages* or */modules* in our main project folder and referenced locally OR somewhere else and hosted on a git source.
+These packages can be stored in a directory - */packages* or */modules* in our main project folder and referenced locally or elsewhere, such as hosted on a git source.
 
 [See directory example for modules.](#module_directory)
 
-**Scalable**: For each data source there MUST be an abstract repository **interface** that is implemented by one or more repositories. This allows us to implement multiple repositories (eg. Firebase, RESTful, Mocked, Local Storage) and switch them whenever we need to or migrate to another provider, ensuring scalabilty.
+**Scalable**: For each data source, there MUST be an abstract repository **interface** implemented by one or more repositories. This allows us to implement multiple repositories (e.g., Firebase, RESTful, Mocked, Local Storage) and switch them whenever we need to or migrate to another provider, ensuring scalability.
 
 ```dart
 abstract class AuthenticationApi {
-  /// Get stream of current user.
+  /// Get a stream of current users.
   Stream<User> get stream;
   /// Get current user.
   User get currentUser;
-  /// Authenticate a new user and updates [stream].
+  /// Authenticate a new user and update [stream].
   Future<void> login(String email, String password);
   /// Logs out the existing user and updates [stream] with an empty user.
   Future<void> logout();
@@ -69,31 +68,31 @@ abstract class AuthenticationApi {
 
 ### Business Logic Layer
 
-The business logic layer is a bridge between the user interface - presentation and the data layer. Flutterfall architecture imposes certain rules that handle the organisation of the business logic.
+The business logic layer is a bridge between the user interface—presentation and the data layer. BRUT architecture imposes certain rules that organize the business logic.
 
-**Abstraction**: Each feature - from a presentation point-of-view: a widget, page or multitude of pages has no more than **one** business logic component. This forces us to expand our app functionality in as many features as possible.
+**Abstraction**: From a presentation point of view, each feature —a widget, page, or multitude of pages—has no more than **one** business logic component. This forces us to expand our app functionality to as many features as possible.
 
 > **Example**
-> We want to implement authentication therefore we make a sign up page and a log in page. We will create two **features** so there will be a logic component for each of them: 
+> We want to implement authentication; therefore, we made a signup page and a log-in page. We will create two **features** so there will be a logic component for each of them: 
 - sign_up_bloc.dart - handles account creation, user input of 3 text fields (email, password, confirmation)
-- login_bloc.dart - containing account authentication, user input 2 text fields (email, password)
+- login_bloc.dart - containing account authentication, user input two text fields (email, password)
 
 All these BLoCs will use the same authentication_repository.dart.
 
 ![](assets/diagrams/Simple_Module-Feature.png)
 
-Of course, depending on our needs, we could create only one feature *authentication* with only one bloc and only one page. But it's generally good practice to separate them as much as possible, especially taking into consideration UI and navigation.
+Of course, depending on our needs, we could create only one feature, authentication, with only one bloc and only one page. But separating them as much as possible is generally good practice, especially when considering UI and navigation.
 
-**Consistency**: Try avoiding **Bloc-to-Bloc** communication as much as possible. Keeping a clean layered pattern is not only beneficial to the functioning and testing capabilities of our app, but also makes it easier to read and understand. **Modules** have a many-to-many relationship with features, and blocs should have no relationship in between them at all.
+**Consistency**: Try avoiding **Bloc-to-Bloc** communication as much as possible. Keeping a clean layered pattern is not only beneficial to our app's functioning and testing capabilities but also makes it easier to read and understand. Modules have a many-to-many relationship with features, and blocs should have no relationship between them at all.
 
 [See directory structure for business logic.](#bloc_directory)
 
-**Injection**: Blocs should respect the repository pattern and use data through dependency-injection.
+**Injection**: Blocs should respect the repository pattern and use data through dependency injection.
 
 ```dart
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
-  final IAuthenticationRepository authenticationRepository;
+  final AuthenticationRepository authenticationRepository;
 
   const AuthenticationBloc({
     required this.authenticationRepository
@@ -103,9 +102,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>{
 
 ### Presentation Layer
 
-The presentation layer is strictly UI building reactive to the bloc's state. You should separate all the presentation building in a file *example_view.dart* away from the bloc provider declaration from *example_page.dart*.
+The presentation layer is strictly UI-building reactive to the bloc's state. It would be best to separate all the presentation-building in a file *example_view.dart* away from the bloc provider declaration in *example_page.dart*.
 
-Example of a **view**:
+**Example (_view.dart)**
 
 ```dart
 import 'package:flutter/material.dart';
@@ -127,7 +126,7 @@ class AuthenticationView extends StatelessWidget {
 }
 ```
 
-Example of a **page**:
+**Example (_page.dart)**
 
 ```dart
 import 'package:flutter/material.dart';
@@ -147,7 +146,7 @@ class AuthenticationPage extends StatelessWidget {
 }
 ```
 
-Tip: UI components throughout the app are can be referencing themselves. Only bloc-to-bloc is discouraged. For example, I can use a widget from my *tasks* feature in my *account* page, or vice-versa.
+UI components throughout the app can reference themselves. Only bloc-to-bloc is discouraged. For example, I can use a widget from my tasks feature on my account page or vice versa.
 
 [See directory structure for presentation.](#view_directory)
 
@@ -200,15 +199,17 @@ To make an idea of how a project using the BRUT architecture concept looks like 
     └── pubspec.yaml
 ```
 
-The _lib/_ folder must contain directories each representing a **piece of functionality** or **feature** and finally the entry-point of your app, _main.dart_:
+The `lib/features` folder must contain directories, each representing a piece of functionality or **feature**. 
+
+The `lib/` directory must contain your app's entry points (e.g., `main_development.dart`), localisation files, and other plugins and extensions.
 
 ![](assets/screenshots/lib_dir_example.png)
 
-The _packages/_ folder contain directories each representing a **module** that exposes **models** and **data repositories** or a theme library. Generally, custom packages made solely for the project.
+The `packages/` folder contains directories, each representing a module that exposes models, data repositories, or a theme library. Custom packages are generally made solely for the project.
 
 ![](assets/screenshots/packages_dir_example.png)
 
-Treating packages as microservices is beneficial to the overall structure therefore it is also allowed to host them somewhere separate, for example on multiple github repositories. The _/packages_ folder only contains **local** packages.
+Treating packages as microservices benefits the overall structure; therefore, it is also allowed to host them somewhere separate, for example, on multiple GitHub repositories. The `packages/` folder only contains local packages.
 
 ### Feature Directory
 
@@ -216,7 +217,7 @@ A feature directory contains everything regarding that specific functionality. T
 
 ![](assets/screenshots/auth_dir_example.png)
 
-A barrel file (_auth.dart)_ is also present, exporting all the files:
+A barrel file (`auth.dart`) is also present, exporting all the files:
 
 ```dart
 export 'view/auth_page.dart';
@@ -228,70 +229,72 @@ export 'input/email.dart';
 export 'input/password.dart';
 ```
 
-> **Each folder and file should be respecting the snake case style** _(profile\_creation/, profile\_creation\_page.dart)._
+Each folder and file should follow the snake case convention (e.g. profile_creation, profile_creation_page.dart).
 
 ### View Directory
 
-The view directory relates only to the specific functionality. It must have 2 files:
+The view directory only has two files:
 
-- View (_auth\_view.dart_) - containing **UI & Widgets**
-- Page (_auth\_page.dart_) - exposing logic **providers** & routing
+- View (`auth_view.dart`) - building UI and widgets
+- Page (`auth_page.dart`) - exposing logic providers and routing
 
 ![](assets/screenshots/view_dir_example.png)
 
 ### BLoC Directory
 
-You will write your feature-specific logic in a folder named &quot;cubit&quot; or &quot;bloc&quot;. Normally, a bloc contains 3 files: the bloc itself, the state and the event. A cubit will only have the cubit and the state. Eg. _auth\_bloc.dart, auth\_state.dart, auth\_event.dart_.
+You will write your feature-specific logic in a folder named &quot;cubit&quot; or &quot;bloc&quot;. Normally, a bloc contains three files: the BLoC, the state and the event. A cubit will only have the cubit and the state. Eg. _auth\_bloc.dart, auth\_state.dart, auth\_event.dart_.
+
+BRUT standards always prefer using cubits, as logic should be simple enough. Again, this framework's philosophy is simplicity over everything. Logic pieces should be self-explanatory.
 
 ![](assets/screenshots/bloc_dir_example.png)
 
 ### Input Directory
 
-If your feature is going to contain text fields for user input, a directory named _input_ will also be present. Every field type must have it&#39;s own **formz** file. [You can read about formz here](https://pub.dev/packages/formz).
+If your feature contains text fields for user input, a directory `input/` will also be present. Every field type must have it&#39;s own [formz](https://pub.dev/packages/formz) file (e.g. email fields will use an `EmailInput` formz class).
 
 ![](assets/screenshots/input_dir_example.png)
 
 ### Widgets Directory
 
-Widgets that are being used inside the view are located inside a _widgets_ folder.
+Widgets used inside the view are located inside a `widgets` folder.
 
 ![](assets/screenshots/widgets_dir_example.png)
 
 ### Config Directory
 
-A feature might need a configuration or static data. This should go into a it&#39;s own _config_ folder.
+A feature might need a configuration or static data. This should go into it&#39;s own `config` folder.
 
 ### Other Directories
 
-These are the most common folders you&#39;ll have inside a feature that should cover most of your needs. If anything, you can create more.
+These are the most common folders you will typically find inside a feature, covering most of your needs. If necessary, you can create additional folders. 
 
-Overall, a feature directory should look similar to this:
+**Example (feature tree)**
 
 ![](assets/screenshots/feature_full_dir_example.png)
 
 ### Module Directory
 
-As previously mentioned, we consider modules - Flutter or Dart packages that we use in our app. To persist abstraction as much as possible, our data services, repositories and models will be separated into these packages; same with our theme library.
+As previously mentioned, we consider modules to be Flutter or Dart packages that we use in our app. To persist abstraction as much as possible, our data services, repositories, and models will be separated into these packages, as will our theme library.
 
-These modules can be situated inside the Flutter app directory or in a separate place, in case you will need to re-use them, maybe for an admin panel for your app.
+These modules can be located inside the Flutter app directory or in a separate location in case you need to re-use them, for example, for an app's admin panel.
 
-A packages directory situated inside your flutter app should look similar to the example below:
+A packages directory situated inside your Flutter app should look similar to the example below:
 
 ![](assets/screenshots/packages_dir_example_2.png)
 
-A **theme package** is a Flutter library that contains all your custom widgets and theme data used in your app.
+A theme package is a Flutter library that contains all the custom widgets and theme data used in your app.
 
 ![](assets/screenshots/theme_package_dir_example.png)
 
-A **data package** is a standard data provider that exposes models and repositories for your use. A repository can access data either on a local disk or the internet.
+A data package is a standard data provider that exposes models and repositories for your use. A repository can access data on a local disk or the Internet.
 
 ![](assets/screenshots/data_package_dir_example.png)
 
-As observed, we have 3 main folders:
+As observed, we have three main folders:
 
-- models - models specific for our module
+- models - models specific to our module
 - repositories - data service for our module - abstracted into an interface and implementations
-- _exceptions_ - if you want to use custom exceptions (example)
+- exceptions - if you want to use custom exceptions (example)
 
 ## Examples
 
@@ -310,9 +313,9 @@ WIP
 
 ## Why?
 
-Bloc itself is an amazing concept and I thank [Felix Angelov](https://github.com/felangel) and the Flutter community for making the awesome state-management library.
+Bloc itself is an amazing concept, and I thank [Felix Angelov](https://github.com/felangel) and the Flutter community for making the excellent state-management library.
 
-What I thought is that bloc's and many other patterns lack a strict architectural pattern. There are many inconsistencies in examples and tutorials all over the internet and a lot of people find it hard to implement bloc their own way.
+What I thought is that blocs and many other patterns lack a strict architectural pattern. There are many inconsistencies in examples and tutorials all over the internet, and many people find it hard to implement blocs their own way.
 
 Initially, I just wanted to make an extension to help me with the boilerplate code and structuring, so I came up with a stricter way of managing and organising a flutter project using bloc, that also comes with a directory structure.
 
