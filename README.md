@@ -6,17 +6,18 @@ An architectural design pattern for the Flutter framework.
 
 ## Overview
 
-**Features**
-- Separation of models, logic and view
-- A firm and consistent directory structure easy to understand
-- Treatment of models and data providers as microservices separate from the main application
-- Abstraction of data repositories, allowing modular backend implementation
+BRUT is an architectural design pattern that uses BLoC to create an architecture featuring:
 
-The goal is to allow you to employ clean architecture in Flutter, simplifying the separation of code into independent layers. These rules will ensure that your project is scalable, easy to read, and consistent while maintaining simplicity.
+Separation of models, logic and view
+A firm and consistent directory structure that is easy to understand
+Treatment of models and data providers as microservices separate from the main application
+Abstraction of data repositories, allowing modular backend implementation
+
+The goal is to allow you to employ clean architecture in Flutter, simplifying code separation into independent layers. These rules will ensure that your project is scalable, easy to read, and consistent while maintaining simplicity.
 
 **Based on**
 
-Flutterfall is based on [bloc](https://pub.dev/packages/flutter_bloc) for stream-based state-management, [formz](https://pub.dev/packages/formz) for form representation input and [equatable](https://pub.dev/packages/equatable).
+BRUT is based on [bloc](https://pub.dev/packages/flutter_bloc) for stream-based state-management, [formz](https://pub.dev/packages/formz) for form representation input and [equatable](https://pub.dev/packages/equatable).
 
 ## Requirements
 
